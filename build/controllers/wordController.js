@@ -18,8 +18,8 @@ const wordController = {
         console.log("req", req.body);
         res.status(200).json(req.body);
     }),
+    // get detail word
     getDetailWord: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log("🚀 ~ file: WordController.ts ~ line 12 ~ getDetailWord: ~ req", req.query);
         const { word = "" } = req.query || {};
         const options = {
             method: "GET",

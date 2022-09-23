@@ -5,9 +5,10 @@
   "author": "duc.trinh",
   "license": "MIT",
   "scripts": {
-    "start": "npx tsc && node build/app.js"
+    "start": "npx tsc && nodemon build/app.js"
   },
   "dependencies": {
+    "@types/nodemon": "^1.19.2",
     "axios": "^0.27.2",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
