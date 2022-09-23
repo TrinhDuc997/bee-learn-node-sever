@@ -1,11 +1,11 @@
 {
   "name": "bee-learn-node-sever",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "author": "duc.trinh",
   "license": "MIT",
   "scripts": {
-    "start": "npx tsc && nodemon build/app.js"
+    "start": "nodemon build/app.js"
   },
   "dependencies": {
     "@types/nodemon": "^1.19.2",
