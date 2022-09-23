@@ -24,6 +24,9 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan("common"));
 
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello world");
+});
 //ROUTER
 app.use("/v1/words", wordRouter);
 
