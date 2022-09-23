@@ -11,6 +11,7 @@ dotenv.config();
 declare var process: {
   env: {
     DATABASE_URL: string;
+    PORT: number;
   };
 };
 mongoose.connect(process.env.DATABASE_URL, () => {
@@ -30,6 +31,6 @@ app.get("/", (req: Request, res: Response) => {
 //ROUTER
 app.use("/v1/words", wordRouter);
 
-app.listen(8000, () => {
+app.listen(process.env.PORT || 8000, () => {
   console.log("sever is running...");
 });
