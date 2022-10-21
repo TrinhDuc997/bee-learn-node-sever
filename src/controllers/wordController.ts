@@ -1,4 +1,3 @@
-import { Word } from "../models/model";
 import { words } from "../models/word";
 import { Request, Response } from "express";
 import axios from "axios";

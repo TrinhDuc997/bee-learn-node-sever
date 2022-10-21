@@ -1,113 +1,60 @@
 import mongoose from "mongoose";
+const uniqueValidator = require("mongoose-unique-validator");
 
-const schemaDetailWord = new mongoose.Schema({
-  type: "object",
-  properties: {
-    entries: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          entry: {
-            type: "string",
-          },
-          pronunciations: {
-            type: "array",
-            items: {
-              type: "object",
-            },
-          },
-          interpretations: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                lemma: {
-                  type: "string",
-                },
-                normalizedLemmas: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      lemma: {
-                        type: "string",
-                      },
-                    },
-                  },
-                },
-                partOfSpeech: {
-                  type: "string",
-                },
-                grammar: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                  },
-                },
-              },
-            },
-          },
-          lexemes: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                lemma: {
-                  type: "string",
-                },
-                partOfSpeech: {
-                  type: "string",
-                },
-                senses: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                  },
-                },
-                forms: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      form: {
-                        type: "string",
-                      },
-                      grammar: {
-                        type: "array",
-                        items: {
-                          type: "object",
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-          license: {
-            type: "object",
-            properties: {
-              name: {
-                type: "string",
-              },
-              url: {
-                type: "string",
-                format: "uri",
-              },
-            },
-          },
-          sourceUrls: {
-            type: "array",
-            items: {
-              type: "string",
-              format: "uri",
-            },
-          },
-        },
-      },
+const schemaPhoneticIPA = new mongoose.Schema(
+  {
+    character: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    urlSoundIPA: {
+      type: String,
+    },
+    nameIconSoundIPA: {
+      type: String,
+    },
+    // exampleWords: {
+    //   type: [{
+    //     word: {
+    //       type: String,
+    //     },
+    //     phonetic:{
+    //       type: String,
+    //     }
+    //   }],
+    // },
+    exampleWord: {
+      type: String,
+    },
+    pronunciationGuide: {
+      type: String,
+    },
+    vowels: {
+      type: Boolean,
+      default: false,
+    },
+    consonants: {
+      type: Boolean,
+      default: false,
     },
   },
-});
+  { collection: "PhoneticIPAs" }
+);
+schemaPhoneticIPA.plugin(uniqueValidator);
 
-export const Word = mongoose.model("Word", schemaDetailWord);
+// interface word {
+//   word: string;
+//   phonetic?: string;
+// }
+export interface IPhoneticIPA {
+  character: string;
+  urlSoundIPA?: string;
+  nameIconSoundIPA?: string;
+  // exampleWords?: word[];
+  exampleWord: string;
+  pronunciationGuide?: string;
+  vowels?: boolean;
+  consonants?: boolean;
+}
+export const PhoneticIPA = mongoose.model("PhoneticIPA", schemaPhoneticIPA);
