@@ -12,15 +12,17 @@ declare var process: {
   env: {
     DATABASE_URL: string;
     PORT: number;
-    DB_Name: string;
+    DB_NAME: string;
     DB_OPTIONS: string;
   };
 };
-const DB_Name = "dbBeeLearn";
 mongoose
-  .connect(`${process.env.DATABASE_URL}${DB_Name}?${process.env.DB_OPTIONS}`, {
-    serverSelectionTimeoutMS: 5000,
-  })
+  .connect(
+    `${process.env.DATABASE_URL}${process.env.DB_NAME}?${process.env.DB_OPTIONS}`,
+    {
+      serverSelectionTimeoutMS: 5000,
+    }
+  )
   .catch((err) => console.log(err));
 /* CONNECT DATABASE - end */
 
