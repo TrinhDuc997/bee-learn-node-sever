@@ -35,8 +35,8 @@ app.use(morgan("common"));
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello world");
 });
-//ROUTER
-app.use("/v1/phoneticIPA", phoneticIPARouter);
+//ROUTER API V1
+app.use("/api/v1/phoneticIPA", phoneticIPARouter);
 
 app.listen(process.env.PORT || 8000, () => {
   console.log("sever is running...");
