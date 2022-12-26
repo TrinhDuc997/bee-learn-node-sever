@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node build/app.js",
     "dev": "nodemon src/app.ts",
-    "postinstall": "tsc"
+    "build": "tsc"
   },
   "dependencies": {
     "@types/nodemon": "^1.19.2",
