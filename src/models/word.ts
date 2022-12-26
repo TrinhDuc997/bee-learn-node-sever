@@ -1,4 +1,5 @@
 export interface word {
-  value: string;
+  word: string;
+  phonetic?: string;
 }
 export interface words extends Array<word> {}

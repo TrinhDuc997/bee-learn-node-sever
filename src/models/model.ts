@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { word } from "./word";
 const uniqueValidator = require("mongoose-unique-validator");
 
 const schemaPhoneticIPA = new mongoose.Schema(
@@ -14,16 +15,18 @@ const schemaPhoneticIPA = new mongoose.Schema(
     nameIconSoundIPA: {
       type: String,
     },
-    // exampleWords: {
-    //   type: [{
-    //     word: {
-    //       type: String,
-    //     },
-    //     phonetic:{
-    //       type: String,
-    //     }
-    //   }],
-    // },
+    exampleWords: {
+      type: [
+        {
+          word: {
+            type: String,
+          },
+          phonetic: {
+            type: String,
+          },
+        },
+      ],
+    },
     exampleWord: {
       type: String,
     },
@@ -36,6 +39,10 @@ const schemaPhoneticIPA = new mongoose.Schema(
     },
     consonants: {
       type: Boolean,
+      default: false,
+    },
+    ordinalNumber: {
+      type: Number,
       default: false,
     },
   },
@@ -51,10 +58,11 @@ export interface IPhoneticIPA {
   character: string;
   urlSoundIPA?: string;
   nameIconSoundIPA?: string;
-  // exampleWords?: word[];
+  exampleWords?: word[];
   exampleWord: string;
   pronunciationGuide?: string;
   vowels?: boolean;
   consonants?: boolean;
+  ordinalNumber: number;
 }
 export const PhoneticIPA = mongoose.model("PhoneticIPA", schemaPhoneticIPA);

@@ -3,9 +3,9 @@ import PhoneticIPAController from "../controllers/phoneticIPAController";
 
 const router = express.Router();
 
-// Add Word
+// Add Phonetic IPA
 router.post("/addPhonetic", PhoneticIPAController.addPhoneticIPA);
-// Get Detail word
+// Get Detail Phoentic IPA
 router.get("/getPhonetic", PhoneticIPAController.getPhoneticIPA);
 
 export default router;

@@ -1,0 +1,639 @@
+// MongoDB Playground
+// To disable this template go to Settings | MongoDB | Use Default Template For Playground.
+// Make sure you are connected to enable completions and to be able to run a playground.
+// Use Ctrl+Space inside a snippet or a string literal to trigger completions.
+
+// Select the database to use.
+use("dbBeeLearn")
+show collections
+db = db.getSiblingDB('dbBeeLearn_DEV')
+db2 = db.getSiblingDB('dbBeeLearn')
+db2.PhoneticIPAs.insertMany(db.PhoneticIPAs.find().toArray());
+// Run a find command to view items sold on April 4th, 2014.
+db.PhoneticIPAs.find().forEach((e, i)=>{
+  db2.PhoneticIPAs.findOneAndUpdate(
+    {character: e.character},
+    {
+      $set:{
+        ordinalNumber: e.ordinalNumber,
+      }
+    }
+  )
+});
+
+db = db.getSiblingDB('dbBeeLearn')
+db.PhoneticIPAs.find().sort({ordinalNumber:1})
+
+const newData=[
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6657d"
+    },
+    "character": "/eə/",
+    "urlSoundIPA": "eə.mp3",
+    "exampleWord": "square /skweə(r)/, fair /feər/",
+    "pronunciationGuide": "đọc như âm ue trong tiếng Việt",
+    "vowels": true,
+    "consonants": false,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "fair",
+        "phonetic": "/feər/ "
+      },
+      {
+        "word": "square",
+        "phonetic": "/skweə(r)/"
+      }
+    ],
+    "Diphthongs": true,
+    "Monophthongs": false,
+    ordinalNumber:18,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66589"
+    },
+    "character": "/d/",
+    "urlSoundIPA": "d.mp3",
+    "exampleWord": "date /deɪt/, old /əʊld/",
+    "pronunciationGuide": "đọc như chữ d của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "date",
+        "phonetic": "/deɪt/"
+      },
+      {
+        "word": "old",
+        "phonetic": "/əʊld/"
+      }
+    ],
+    "Diphthongs": false,
+    "Monophthongs": true,
+    ordinalNumber:24,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6657c"
+    },
+    "character": "/ɪə/",
+    "urlSoundIPA": "ɪə.mp3",
+    "exampleWord": "near /nɪə(r)/, here /hɪər/",
+    "pronunciationGuide": "đọc như âm ia trong tiếng Việt",
+    "vowels": true,
+    "consonants": false,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "near",
+        "phonetic": "/nɪə(r)/"
+      },
+      {
+        "word": "here",
+        "phonetic": "/hɪər/"
+      }
+    ],
+    "Diphthongs": true,
+    "Monophthongs": false,
+    ordinalNumber:18,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6658c"
+    },
+    "character": "/ʧ/",
+    "urlSoundIPA": "ʧ.mp3",
+    "exampleWord": "church /ʧɜːʧ/, match /mætʃ/",
+    "pronunciationGuide": "đọc như chữ ch của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "church",
+        "phonetic": "/ʧɜːʧ/"
+      },
+      {
+        "word": "match",
+        "phonetic": "/mætʃ/"
+      }
+    ],
+    "Diphthongs": true,
+    "Monophthongs": false,
+    ordinalNumber:25,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6658d"
+    },
+    "character": "/ʤ/",
+    "urlSoundIPA": "ʤ.mp3",
+    "exampleWord": "judge /dʒʌdʒ/, age /eiʤ/, soldier /ˈsəʊl.dʒər/",
+    "pronunciationGuide": "phát thành âm jơ (uốn lưỡi)",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "judge",
+        "phonetic": "/dʒʌdʒ/"
+      },
+      {
+        "word": "age",
+        "phonetic": "/eiʤ/,"
+      }
+    ],
+    "Diphthongs": true,
+    "Monophthongs": false,
+    ordinalNumber:26,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6658e"
+    },
+    "character": "/f/",
+    "urlSoundIPA": "f.mp3",
+    "exampleWord": "fat /fæt/, rough/rʌf/",
+    "pronunciationGuide": "đọc như chữ f của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "fat",
+        "phonetic": "/fæt/"
+      },
+      {
+        "word": "rough/rʌf/",
+        "phonetic": null
+      }
+    ],
+    "Diphthongs": false,
+    "Monophthongs": true,
+    ordinalNumber:29,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6658f"
+    },
+    "character": "/v/",
+    "urlSoundIPA": "v.mp3",
+    "exampleWord": "van /væn/, heavy /ˈhev.i/",
+    "pronunciationGuide": "đọc như chữ v của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "van",
+        "phonetic": "/væn/"
+      },
+      {
+        "word": "heavy",
+        "phonetic": "/ˈhev.i/"
+      }
+    ],
+    "Diphthongs": false,
+    "Monophthongs": true,
+    ordinalNumber:30,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66590"
+    },
+    "character": "/θ/",
+    "urlSoundIPA": "θ.mp3",
+    "exampleWord": "thing /θɪn/, author /ˈɔː.θər/  ",
+    "pronunciationGuide": "đọc như chữ th của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "thing",
+        "phonetic": "/θɪn/"
+      },
+      {
+        "word": "author",
+        "phonetic": "/ˈɔː.θər/  "
+      }
+    ],
+    "Diphthongs": false,
+    "Monophthongs": true,
+    ordinalNumber:31,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66591"
+    },
+    "character": "/ð/",
+    "urlSoundIPA": "ð.mp3",
+    "exampleWord": "that /ðæt/, smooth /smuːð/",
+    "pronunciationGuide": "đọc như chữ d của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "that",
+        "phonetic": "/ðæt/"
+      },
+      {
+        "word": "smooth",
+        "phonetic": "/smuːð/"
+      }
+    ],
+    "Diphthongs": false,
+    "Monophthongs": true,
+    ordinalNumber:32,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66592"
+    },
+    "character": "/s/",
+    "urlSoundIPA": "s.mp3",
+    "exampleWord": "son /sʌn/, cease, sister",
+    "pronunciationGuide": "đọc như chữ s của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "son",
+        "phonetic": "/sʌn/"
+      },
+      {
+        "word": "cease,",
+        "phonetic": "sister"
+      }
+    ],
+    "Diphthongs": true,
+    "Monophthongs": false,
+    ordinalNumber:33,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66593"
+    },
+    "character": "/z/",
+    "urlSoundIPA": "z.mp3",
+    "exampleWord": "zoo /zuː/, roses /rəʊz/",
+    "pronunciationGuide": "đọc như chữ zờ của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "zoo",
+        "phonetic": "/zuː/"
+      },
+      {
+        "word": "roses",
+        "phonetic": "/rəʊz/"
+      }
+    ],
+    "Diphthongs": true,
+    "Monophthongs": false,
+    ordinalNumber:34,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66594"
+    },
+    "character": "/ʃ/",
+    "urlSoundIPA": "ʃ.mp3",
+    "exampleWord": "ship /ʃɪp/, sure /ʃɔː(r)/",
+    "pronunciationGuide": "đọc như s (uốn lưỡi) của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "ship",
+        "phonetic": "/ʃɪp/"
+      },
+      {
+        "word": "sure",
+        "phonetic": "/ʃɔː(r)/"
+      }
+    ],
+    "Diphthongs": true,
+    "Monophthongs": false,
+    ordinalNumber:35,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66595"
+    },
+    "character": "/ʒ/",
+    "urlSoundIPA": "ʒ.mp3",
+    "exampleWord": "pleasure /’pleʒə(r), vision /ˈvɪʒ.ən/",
+    "pronunciationGuide": "đọc như d (uốn lưỡi để bật âm) của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "vision",
+        "phonetic": "/ˈvɪʒ.ən/"
+      },
+      {
+        "word": "pleasure",
+        "phonetic": "/’pleʒə(r)"
+      }
+    ],
+    "Diphthongs": true,
+    "Monophthongs": false,
+    ordinalNumber:36,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66597"
+    },
+    "character": "/m/",
+    "urlSoundIPA": "m.mp3",
+    "exampleWord": "more /mɔːr/, mine /maɪn/",
+    "pronunciationGuide": "đọc như m của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "more",
+        "phonetic": "/mɔːr/"
+      },
+      {
+        "word": "mine",
+        "phonetic": "/maɪn/"
+      }
+    ],
+    "Diphthongs": false,
+    "Monophthongs": true,
+    ordinalNumber:37,
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66596"
+    },
+    "character": "/h/",
+    "urlSoundIPA": "h.mp3",
+    "exampleWord": "hot /hɒt/, whole /həʊl/",
+    "pronunciationGuide": "đọc như h của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "hot",
+        "phonetic": "/hɒt/"
+      },
+      {
+        "word": "whole",
+        "phonetic": "/həʊl/"
+      }
+    ],
+    "Diphthongs": false,
+    "Monophthongs": true,
+    ordinalNumber:40,
+
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66599"
+    },
+    "character": "/ŋ/",
+    "urlSoundIPA": "ŋ.mp3",
+    "exampleWord": "ring /riŋ/, long /lɒŋ/",
+    "pronunciationGuide": "Vai trò như vần ng của tiếng Việt (chỉ đứng cuối từ)",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "ring",
+        "phonetic": "/riŋ/"
+      },
+      {
+        "word": "long",
+        "phonetic": "/lɒŋ/"
+      }
+    ],
+    "Diphthongs": false,
+    ordinalNumber:39,
+    "Monophthongs": true
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66598"
+    },
+    "character": "/n/",
+    "urlSoundIPA": "n.mp3",
+    "exampleWord": "nine /naɪn/, sun /sʌn/",
+    "pronunciationGuide": "đọc như n của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "nine",
+        "phonetic": "/naɪn/"
+      },
+      {
+        "word": "sun",
+        "phonetic": "/sʌn/"
+      }
+    ],
+    "Diphthongs": false,
+    ordinalNumber:38,
+    "Monophthongs": true
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6659a"
+    },
+    "character": "/l/",
+    "urlSoundIPA": "l.mp3",
+    "exampleWord": "live /lɪv/, like /laɪk/  ",
+    "pronunciationGuide": "đọc như chữ L của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "live",
+        "phonetic": "/lɪv/"
+      },
+      {
+        "word": "like",
+        "phonetic": "/laɪk/  "
+      }
+    ],
+    "Diphthongs": true,
+    ordinalNumber:41,
+    "Monophthongs": false
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6659b"
+    },
+    "character": "/r/",
+    "urlSoundIPA": "r.mp3",
+    "exampleWord": "rich /rɪtʃ/, rose /rəʊz/",
+    "pronunciationGuide": "đọc như chữ r của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "rich",
+        "phonetic": "/rɪtʃ/"
+      },
+      {
+        "word": "rose",
+        "phonetic": "/rəʊz/"
+      }
+    ],
+    "Diphthongs": true,
+    ordinalNumber:42,
+    "Monophthongs": false
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6659c"
+    },
+    "character": "/j/",
+    "urlSoundIPA": "j.mp3",
+    "exampleWord": "yet /jes/, use /ju:z/",
+    "pronunciationGuide": "đọc như chữ z (nhấn mạnh) – hoặc kết hợpvới chữ u → ju – đọc iu",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "yet",
+        "phonetic": "/jes/"
+      },
+      {
+        "word": "use",
+        "phonetic": "/ju:z/"
+      }
+    ],
+    "Diphthongs": true,
+    "Monophthongs": false
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af66572"
+    },
+    "character": "/ɒ/",
+    "urlSoundIPA": "ɒ.mp3",
+    "exampleWord": "lot /lɒt/, hot /hɒt/",
+    "pronunciationGuide": "đọc o như trong tiếng Việt",
+    "vowels": true,
+    "consonants": false,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "lot",
+        "phonetic": "/lɒt/"
+      },
+      {
+        "word": "hot",
+        "phonetic": "/hɒt/"
+      }
+    ],
+    "Diphthongs": false,
+    ordinalNumber:17,
+    "Monophthongs": true
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6658a"
+    },
+    "character": "/k/",
+    "urlSoundIPA": "k.mp3",
+    "exampleWord": "keep /kiːp/, school /sku:l/",
+    "pronunciationGuide": "đọc như chữ c của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "keep",
+        "phonetic": "/kiːp/"
+      },
+      {
+        "word": "school",
+        "phonetic": "/sku:l/"
+      }
+    ],
+    "Diphthongs": true,
+    ordinalNumber:27,
+    "Monophthongs": false
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6658b"
+    },
+    "character": "/g/",
+    "urlSoundIPA": "g.mp3",
+    "exampleWord": "get /ɡet/, go /ɡəʊ/",
+    "pronunciationGuide": "đọc như chữ g của tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": "get",
+        "phonetic": "/ɡet/"
+      },
+      {
+        "word": "go",
+        "phonetic": "/ɡəʊ/"
+      }
+    ],
+    "Diphthongs": true,
+    ordinalNumber:28,
+    "Monophthongs": false
+  },
+  {
+    "_id": {
+      "$oid": "63527ed580e49b940af6659d"
+    },
+    "character": "/w/",
+    "urlSoundIPA": "w.mp3",
+    "exampleWord": " ",
+    "pronunciationGuide": "đọc như chữ g trong tiếng Việt",
+    "vowels": false,
+    "consonants": true,
+    "__v": 0,
+    "exampleWords": [
+      {
+        "word": " one",
+        "phonetic": "/wʌn/"
+      },
+      {
+        "word": "queen",
+        "phonetic": "/kwiːn/"
+      }
+    ],
+    "Diphthongs": true,
+    ordinalNumber:43,
+    "Monophthongs": false
+  }
+]
+db = db.getSiblingDB('dbBeeLearn_DEV')
+newData.forEach(item => {
+  db.PhoneticIPAs.findOneAndUpdate(
+    {character: item.character},
+    {
+      $set:{
+        ordinalNumber: item["ordinalNumber"],
+      }
+    }
+  )
+})

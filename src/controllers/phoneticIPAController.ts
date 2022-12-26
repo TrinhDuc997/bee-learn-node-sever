@@ -22,11 +22,16 @@ const PhoneticIPAController = {
 
   getPhoneticIPA: async (req: Request, res: Response) => {
     try {
-      const phoneticIPAs = await PhoneticIPA.find();
+      const phoneticIPAs = await PhoneticIPA.find().sort({ ordinalNumber: 1 });
       res.status(200).json(phoneticIPAs);
     } catch (error) {
       res.status(500).json(error);
     }
+  },
+
+  editPhoneticIPA: async (req: Request, res: Response) => {
+    try {
+    } catch (error) {}
   },
 };
 
