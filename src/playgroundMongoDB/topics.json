@@ -1,0 +1,307 @@
+[
+    {
+        "title": "EDUCATION",
+        "subTitle": "GIÁO DỤC",
+        "tag": [
+            "TOEIC",
+            "IELTS"
+        ]
+    },
+    {
+        "title": "SCHOOL OBJECTS",
+        "subTitle": "ĐỒ DÙNG HỌC TẬP",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "NATURE",
+        "subTitle": "THIÊN NHIÊN",
+        "tag": [
+            "TOEIC",
+            "IELTS"
+        ]
+    },
+    {
+        "title": "ANIMALS",
+        "subTitle": "ĐỘNG VẬT",
+        "tag": [
+            "TOEIC",
+            "IELTS"
+        ]
+    },
+    {
+        "title": "LEISURE TIME",
+        "subTitle": "GIẢI TRÍ",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "HOUSE AND HOME",
+        "subTitle": "NHÀ CỬA",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "FRUIT AND VEGETABLES",
+        "subTitle": "RAU QUẢ",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "CHARACTERISTICS",
+        "subTitle": "TÍNH CÁCH",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "BODY PARTS",
+        "subTitle": "BỘ PHẬN CƠ THỂ",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "FOOD AND DRINKS",
+        "subTitle": "ĐỒ ĂN VÀ THỨC UỐNG",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "BODY MOVEMENTS",
+        "subTitle": "ĐỘNG TÁC",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "CLOTHES AND ACCESSORIES",
+        "subTitle": "QUẦN ÁO VÀ PHỤ KIỆN",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "EMOTIONS AND FEELINGS",
+        "subTitle": "CẢM XÚC",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "COOKING VERBS",
+        "subTitle": "NẤU NƯỚNG",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "JOBS AND OCCUPATIONS",
+        "subTitle": "NGHỀ NGHIỆP",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "COLORS AND SHAPES",
+        "subTitle": "MÀU SẮC VÀ HÌNH DẠNG",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "VEHICLES",
+        "subTitle": "PHƯƠNG TIỆN GIAO THÔNG",
+        "tag": [
+            "TOEIC",
+            "IELTS"
+        ]
+    },
+    {
+        "title": "TRAVEL",
+        "subTitle": "DU LỊCH",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "FAMILY",
+        "subTitle": "GIA ĐÌNH",
+        "tag": [
+            "TOEIC"
+        ]
+    },
+    {
+        "title": "BUSINESS AND MONEY",
+        "subTitle": "KINH DOANH VÀ TIỀN BẠC",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "HOMES",
+        "subTitle": "NHÀ CỬA",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "TOWNS AND CITIES",
+        "subTitle": "THÀNH THỊ",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "PLANTS",
+        "subTitle": "CÂY CỐI",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "SUBJECTS",
+        "subTitle": "MÔN HỌC",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "MARKETING",
+        "subTitle": "TIẾP THỊ",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "HEALTH",
+        "subTitle": "SỨC KHỎE",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "ENVIRONMENT",
+        "subTitle": "MÔI TRƯỜNG",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "TIME EXPRESSIONS",
+        "subTitle": "DIỄN TẢ THỜI GIAN",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "COLORS",
+        "subTitle": "MÀU SẮC",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "JOBS",
+        "subTitle": "CÔNG VIỆC",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "MATERIALS",
+        "subTitle": "CHẤT LIỆU",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "ARS AND MEDIA",
+        "subTitle": "NGHỆ THUẬT VÀ TRUYỀN THÔNG",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "WORKPLACE",
+        "subTitle": "NƠI LÀM VIỆC",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "QUALITIES",
+        "subTitle": "TÍNH CHẤT",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "TOURING",
+        "subTitle": "DU LỊCH",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "SHAPES",
+        "subTitle": "HÌNH DẠNG",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "TRANSPORTATIONS",
+        "subTitle": "GIAO THÔNG",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "EQUIPMENT AND TOOLS",
+        "subTitle": "THIẾT BỊ, DỤNG CỤ",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "ARCHITECTURE",
+        "subTitle": "KIẾN TRÚC",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "SPORTS",
+        "subTitle": "THỂ THAO",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "OTHERS",
+        "subTitle": "TỪ KHÁC",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "FASHION",
+        "subTitle": "THỜI TRANG",
+        "tag": [
+            "IELTS"
+        ]
+    },
+    {
+        "title": "TECHNOLOGY",
+        "subTitle": "CÔNG NGHỆ",
+        "tag": [
+            "IELTS"
+        ]
+    }
+]

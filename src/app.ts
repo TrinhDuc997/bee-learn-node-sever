@@ -5,6 +5,7 @@ import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import phoneticIPARouter from "./routes/phoneticIPA";
+import wordRouter from "./routes/word";
 dotenv.config();
 
 /* CONNECT DATABASE - start */
@@ -28,7 +29,7 @@ mongoose
 
 const app: Application = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cors());
 app.use(morgan("common"));
 
@@ -37,6 +38,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 //ROUTER API V1
 app.use("/v1/posts", phoneticIPARouter);
+
+app.use("/v1/words", wordRouter);
 
 app.listen(process.env.PORT || 8000, () => {
   console.log("sever is running...");
