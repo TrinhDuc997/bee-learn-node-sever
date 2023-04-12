@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newWords = exports.VocabularySubjects = exports.WordsExpand = exports.Words = exports.PhoneticIPA = void 0;
+exports.VocabularySubjects = exports.Words = exports.PhoneticIPA = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const uniqueValidator = require("mongoose-unique-validator");
 const schemaPhoneticIPA = new mongoose_1.default.Schema({
@@ -114,116 +114,6 @@ const SchemaWords = new mongoose_1.default.Schema({
     },
 });
 exports.Words = mongoose_1.default.model("Words", SchemaWords);
-const schemaWordsExpand = new mongoose_1.default.Schema({
-    type: Object,
-    properties: {
-        entries: {
-            type: Array,
-            items: {
-                type: Object,
-                properties: {
-                    entry: {
-                        type: String,
-                    },
-                    pronunciations: {
-                        type: Array,
-                        items: {
-                            type: Object,
-                        },
-                    },
-                    interpretations: {
-                        type: Array,
-                        items: {
-                            type: Object,
-                            properties: {
-                                lemma: {
-                                    type: String,
-                                },
-                                normalizedLemmas: {
-                                    type: Array,
-                                    items: {
-                                        type: Object,
-                                        properties: {
-                                            lemma: {
-                                                type: String,
-                                            },
-                                        },
-                                    },
-                                },
-                                partOfSpeech: {
-                                    type: String,
-                                },
-                                grammar: {
-                                    type: Array,
-                                    items: {
-                                        type: Object,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                    lexemes: {
-                        type: Array,
-                        items: {
-                            type: Object,
-                            properties: {
-                                lemma: {
-                                    type: String,
-                                },
-                                partOfSpeech: {
-                                    type: String,
-                                },
-                                senses: {
-                                    type: Array,
-                                    items: {
-                                        type: Object,
-                                    },
-                                },
-                                forms: {
-                                    type: Array,
-                                    items: {
-                                        type: Object,
-                                        properties: {
-                                            form: {
-                                                type: String,
-                                            },
-                                            grammar: {
-                                                type: Array,
-                                                items: {
-                                                    type: Object,
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                    license: {
-                        type: Object,
-                        properties: {
-                            name: {
-                                type: String,
-                            },
-                            url: {
-                                type: String,
-                                format: URL,
-                            },
-                        },
-                    },
-                    sourceUrls: {
-                        type: Array,
-                        items: {
-                            type: String,
-                            format: URL,
-                        },
-                    },
-                },
-            },
-        },
-    },
-});
-exports.WordsExpand = mongoose_1.default.model("WordsExpand", schemaWordsExpand);
 const schemaVocabularySubject = new mongoose_1.default.Schema({
     title: String,
     description: String,
@@ -238,20 +128,3 @@ const schemaVocabularySubject = new mongoose_1.default.Schema({
     },
 }, { collection: "VocabularySubjects" });
 exports.VocabularySubjects = mongoose_1.default.model("VocabularySubjects", schemaVocabularySubject);
-const SchemanewWords = new mongoose_1.default.Schema({
-    word: {
-        type: String,
-        require: true,
-        unique: true,
-    },
-    html: {
-        type: String,
-    },
-    description: {
-        type: String,
-    },
-    pronounce: {
-        type: String,
-    },
-}, { collection: "newWords" });
-exports.newWords = mongoose_1.default.model("newWords", SchemanewWords);
