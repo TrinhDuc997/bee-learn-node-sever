@@ -86,9 +86,17 @@ const wordController = {
         try {
             const { page = 0, limit = 1000, subject = "" } = req.query || {};
             const numberSkip = Number(page) * Number(limit);
-            const dataWords = yield models_1.Words.find({ topics: { $regex: subject } })
-                .limit(Number(limit))
-                .skip(Number(numberSkip));
+            let dataWords;
+            if (subject === "ALL") {
+                dataWords = yield models_1.Words.find()
+                    .limit(Number(limit))
+                    .skip(Number(numberSkip));
+            }
+            else {
+                dataWords = yield models_1.Words.find({ topics: { $regex: subject } })
+                    .limit(Number(limit))
+                    .skip(Number(numberSkip));
+            }
             res.status(200).json(dataWords);
         }
         catch (error) {
@@ -107,9 +115,15 @@ const wordController = {
     getSizeCollection: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const { subject = "" } = req.query || {};
-            const sizeCollection = yield models_1.Words.find({
-                topics: { $regex: subject },
-            }).count();
+            let sizeCollection;
+            if (subject === "ALL") {
+                sizeCollection = yield models_1.Words.find().count();
+            }
+            else {
+                sizeCollection = yield models_1.Words.find({
+                    topics: { $regex: subject },
+                }).count();
+            }
             res.status(200).json(sizeCollection);
         }
         catch (error) {

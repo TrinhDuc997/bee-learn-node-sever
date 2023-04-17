@@ -1,4 +1,5 @@
-import { PhoneticIPA, IPhoneticIPA } from "../models";
+import { IPhoneticIPA } from "../interfaces";
+import { PhoneticIPA } from "../models";
 import { Request, Response } from "express";
 
 const PhoneticIPAController = {

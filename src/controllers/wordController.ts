@@ -1,4 +1,4 @@
-import { IWord } from "../models/word";
+import { IWord } from "../interfaces";
 import { Request, Response } from "express";
 import axios from "axios";
 import { VocabularySubjects, Words } from "../models";
@@ -82,9 +82,17 @@ const wordController = {
     try {
       const { page = 0, limit = 1000, subject = "" } = req.query || {};
       const numberSkip = Number(page) * Number(limit);
-      const dataWords = await Words.find({ topics: { $regex: subject } })
-        .limit(Number(limit))
-        .skip(Number(numberSkip));
+      let dataWords;
+      if (subject === "ALL") {
+        dataWords = await Words.find()
+          .limit(Number(limit))
+          .skip(Number(numberSkip));
+      } else {
+        dataWords = await Words.find({ topics: { $regex: subject } })
+          .limit(Number(limit))
+          .skip(Number(numberSkip));
+      }
+
       res.status(200).json(dataWords);
     } catch (error) {
       res.status(500).json(error);
@@ -102,9 +110,14 @@ const wordController = {
   getSizeCollection: async (req: Request, res: Response) => {
     try {
       const { subject = "" } = req.query || {};
-      const sizeCollection = await Words.find({
-        topics: { $regex: subject },
-      }).count();
+      let sizeCollection: number;
+      if (subject === "ALL") {
+        sizeCollection = await Words.find().count();
+      } else {
+        sizeCollection = await Words.find({
+          topics: { $regex: subject },
+        }).count();
+      }
       res.status(200).json(sizeCollection);
     } catch (error) {
       res.status(500).json(error);
