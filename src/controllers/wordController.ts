@@ -87,6 +87,10 @@ const wordController = {
         dataWords = await Words.find()
           .limit(Number(limit))
           .skip(Number(numberSkip));
+      } else if (subject === "BASIC") {
+        dataWords = await Words.find({ topics: { $regex: subject } })
+          .limit(Number(limit))
+          .skip(Number(numberSkip));
       } else {
         dataWords = await Words.find({ topics: { $regex: subject } })
           .limit(Number(limit))
@@ -99,8 +103,26 @@ const wordController = {
     }
   },
   getListVocabularySubjects: async (req: Request, res: Response) => {
+    const { course = "" } = req.query || {};
     try {
-      const listVocabularySubjects = await VocabularySubjects.find();
+      let listVocabularySubjects = [];
+      if (course === "BASIC") {
+        let sizeDataWords = await Words.find({
+          topics: { $regex: course },
+        }).count();
+        for (let i = 0; i < Math.ceil(sizeDataWords / 20); i++) {
+          listVocabularySubjects.push({
+            _id: `Pack ${i + 1}`,
+            title: `Chủ đề ${i + 1}`,
+            subTitle: `20 Từ`,
+            hrefImg: `Pack ${i + 1}`,
+          });
+        }
+      } else {
+        listVocabularySubjects = await VocabularySubjects.find({
+          tag: { $regex: course },
+        });
+      }
       res.status(200).json(listVocabularySubjects);
     } catch (error) {
       res.status(500).json(error);

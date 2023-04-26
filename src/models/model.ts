@@ -135,3 +135,27 @@ export const VocabularySubjects = mongoose.model(
   "VocabularySubjects",
   schemaVocabularySubject
 );
+
+// create a new schema for users
+const usersSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
+    email: { type: String, unique: true },
+    password: { type: String, required: true },
+    googleId: { type: String, default: null },
+    facebookId: { type: String, default: null },
+    techLogin: { type: String, default: null },
+    tokens: {
+      type: [
+        {
+          type: String,
+        },
+      ],
+    },
+  },
+  { collection: "Users" }
+);
+
+// create a new model based on the schema
+export const Users = mongoose.model("Users", usersSchema);

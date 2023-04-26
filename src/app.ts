@@ -6,6 +6,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import phoneticIPARouter from "./routes/phoneticIPA";
 import wordRouter from "./routes/word";
+import userRouter from "./routes/user";
 dotenv.config();
 
 /* CONNECT DATABASE - start */
@@ -40,6 +41,8 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/v1/posts", phoneticIPARouter);
 
 app.use("/v1/words", wordRouter);
+
+app.use("/v1/user", userRouter);
 
 app.listen(process.env.PORT || 8000, () => {
   console.log("sever is running...");
