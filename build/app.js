@@ -11,6 +11,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const phoneticIPA_1 = __importDefault(require("./routes/phoneticIPA"));
 const word_1 = __importDefault(require("./routes/word"));
+const user_1 = __importDefault(require("./routes/user"));
 dotenv_1.default.config();
 mongoose_1.default
     .connect(`${process.env.DATABASE_URL}${process.env.DB_NAME}?${process.env.DB_OPTIONS}`, {
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 //ROUTER API V1
 app.use("/v1/posts", phoneticIPA_1.default);
 app.use("/v1/words", word_1.default);
+app.use("/v1/user", user_1.default);
 app.listen(process.env.PORT || 8000, () => {
     console.log("sever is running...");
 });

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VocabularySubjects = exports.Words = exports.PhoneticIPA = void 0;
+exports.Users = exports.VocabularySubjects = exports.Words = exports.PhoneticIPA = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const uniqueValidator = require("mongoose-unique-validator");
 const schemaPhoneticIPA = new mongoose_1.default.Schema({
@@ -128,3 +128,22 @@ const schemaVocabularySubject = new mongoose_1.default.Schema({
     },
 }, { collection: "VocabularySubjects" });
 exports.VocabularySubjects = mongoose_1.default.model("VocabularySubjects", schemaVocabularySubject);
+// create a new schema for users
+const usersSchema = new mongoose_1.default.Schema({
+    name: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
+    email: { type: String, unique: true },
+    password: { type: String, required: true },
+    googleId: { type: String, default: null },
+    facebookId: { type: String, default: null },
+    techLogin: { type: String, default: null },
+    tokens: {
+        type: [
+            {
+                type: String,
+            },
+        ],
+    },
+}, { collection: "Users" });
+// create a new model based on the schema
+exports.Users = mongoose_1.default.model("Users", usersSchema);
