@@ -106,11 +106,7 @@ const SchemaWords = new mongoose.Schema({
     ],
   },
   topics: {
-    type: [
-      {
-        type: String,
-      },
-    ],
+    type: [String],
   },
 });
 export const Words = mongoose.model("Words", SchemaWords);
@@ -122,12 +118,9 @@ const schemaVocabularySubject = new mongoose.Schema(
     subTitle: String,
     hrefImg: String,
     tag: {
-      type: [
-        {
-          type: String,
-        },
-      ],
+      type: [String],
     },
+    numberWord: Number,
   },
   { collection: "VocabularySubjects" }
 );
@@ -147,9 +140,26 @@ const usersSchema = new mongoose.Schema(
     facebookId: { type: String, default: null },
     techLogin: { type: String, default: null },
     tokens: {
+      type: [String],
+    },
+    wordsLearned: {
       type: [
         {
-          type: String,
+          word: { type: String, unique: true, required: true },
+          numberOfReview: { type: Number },
+          numberOfReviewCorrect: { type: Number },
+          lastTimeReview: { type: Number },
+        },
+      ],
+    },
+    courseLearned: {
+      type: [
+        {
+          course: { type: String, unique: true, required: true },
+          subject: { type: String, unique: true, required: true },
+          numberPacks: {
+            type: [Number],
+          },
         },
       ],
     },

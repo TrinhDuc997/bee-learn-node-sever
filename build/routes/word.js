@@ -19,4 +19,9 @@ router.get("/getListWords", wordController_1.default.getListWords);
 router.get("/getSizeCollection", wordController_1.default.getSizeCollection);
 // Get List Vocabulary Subjects
 router.get("/getListVocabularySubjects", wordController_1.default.getListVocabularySubjects);
+// Update List Vocabulary Subjects
+router.put("/updateVocabularySubjects", wordController_1.default.updateVocabularySubjects);
+// Update Words User Learned
+router.put("/updateWordsUserLearned", wordController_1.default.updateWordsUserLearned);
+router.get("/getListWordsToReview", wordController_1.default.getListWordsToReview);
 exports.default = router;

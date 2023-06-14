@@ -24,12 +24,14 @@ interface IDefinition {
   examples?: IExample[];
 }
 export interface IWord {
+  _id?: any;
   word: string;
   pronounce?: string;
   image?: string;
   examples?: string[];
   customExamples?: string[];
   definition?: string;
+  description?: string;
   pronunciation?: string;
   audio?: string;
   pos?: string;
@@ -38,3 +40,11 @@ export interface IWord {
   topics?: string[];
 }
 export interface IWords extends Array<IWord> {}
+
+export interface IWordLeaned {
+  _id: string;
+  word: string;
+  numberOfReview: number;
+  numberOfReviewCorrect: number;
+  lastTimeReview: number;
+}

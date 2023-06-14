@@ -106,11 +106,7 @@ const SchemaWords = new mongoose_1.default.Schema({
         ],
     },
     topics: {
-        type: [
-            {
-                type: String,
-            },
-        ],
+        type: [String],
     },
 });
 exports.Words = mongoose_1.default.model("Words", SchemaWords);
@@ -120,12 +116,9 @@ const schemaVocabularySubject = new mongoose_1.default.Schema({
     subTitle: String,
     hrefImg: String,
     tag: {
-        type: [
-            {
-                type: String,
-            },
-        ],
+        type: [String],
     },
+    numberWord: Number,
 }, { collection: "VocabularySubjects" });
 exports.VocabularySubjects = mongoose_1.default.model("VocabularySubjects", schemaVocabularySubject);
 // create a new schema for users
@@ -138,9 +131,26 @@ const usersSchema = new mongoose_1.default.Schema({
     facebookId: { type: String, default: null },
     techLogin: { type: String, default: null },
     tokens: {
+        type: [String],
+    },
+    wordsLearned: {
         type: [
             {
-                type: String,
+                word: { type: String, unique: true, required: true },
+                numberOfReview: { type: Number },
+                numberOfReviewCorrect: { type: Number },
+                lastTimeReview: { type: Number },
+            },
+        ],
+    },
+    courseLearned: {
+        type: [
+            {
+                course: { type: String, unique: true, required: true },
+                subject: { type: String, unique: true, required: true },
+                numberPacks: {
+                    type: [Number],
+                },
             },
         ],
     },

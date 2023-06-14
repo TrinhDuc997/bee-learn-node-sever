@@ -19,4 +19,14 @@ router.get(
   "/getListVocabularySubjects",
   wordController.getListVocabularySubjects
 );
+// Update List Vocabulary Subjects
+router.put(
+  "/updateVocabularySubjects",
+  wordController.updateVocabularySubjects
+);
+// Update Words User Learned
+router.put("/updateWordsUserLearned", wordController.updateWordsUserLearned);
+
+router.get("/getListWordsToReview", wordController.getListWordsToReview);
+
 export default router;
