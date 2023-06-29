@@ -23,12 +23,18 @@ interface IDefinition {
   meaning?: string;
   examples?: IExample[];
 }
+interface IExampleOfWord {
+  type?: string;
+  translation?: string;
+  example?: string;
+  translateExample?: string;
+}
 export interface IWord {
   _id?: any;
   word: string;
   pronounce?: string;
   image?: string;
-  examples?: string[];
+  examples?: IExampleOfWord[]; // it be used to save data generate form AI
   customExamples?: string[];
   definition?: string;
   description?: string;
@@ -47,4 +53,11 @@ export interface IWordLeaned {
   numberOfReview: number;
   numberOfReviewCorrect: number;
   lastTimeReview: number;
+}
+
+export interface IDataFilterWord {
+  page?: number;
+  limit?: number;
+  subject?: string;
+  subjects?: string[];
 }

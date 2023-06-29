@@ -1,8 +1,15 @@
-import { ICourseLearned, IUser, IWord, IWordLeaned } from "../interfaces";
+import {
+  ICourseLearned,
+  IDataFilterWord,
+  IUser,
+  IWord,
+  IWordLeaned,
+} from "../interfaces";
 import { Request, Response } from "express";
 import axios from "axios";
 import { Users, VocabularySubjects, Words } from "../models";
 import jwt from "jsonwebtoken";
+import { getHierarchicalArrayOfWords } from "../utils/commonUtils";
 
 declare var process: {
   env: {
@@ -35,28 +42,33 @@ const wordController = {
 
   updateListWord: async (req: Request, res: Response) => {
     try {
-      const arrWords = req.body;
-      arrWords.forEach(async (element: any) => {
-        Words.updateOne(
-          {
-            word: element.word,
-            topics: { $not: { $elemMatch: { $in: element.topics } } }, // when updating will check the value in topics if exist then no more update
-          },
-          {
-            $set: { pos: element.type, definition: element.meaning },
-            $addToSet: { topics: { $each: element.topics } },
-          },
-          { upsert: true },
-          (err, result) => {
-            if (err) {
-              console.log(`Error: ${err}`);
-            } else {
-              console.log(`Updated ${result.modifiedCount} document(s)`);
-            }
+      const arrWords = req.body as IWord[];
+      console.log(
+        "🚀 ~ file: wordController.ts:46 ~ updateListWord: ~ arrWords:",
+        arrWords
+      );
+
+      const updatedWords = await Promise.all(
+        arrWords.map(async (element) => {
+          const result = await Words.updateOne(
+            { word: element.word },
+            {
+              $set: { ...element },
+            },
+            { upsert: true }
+          );
+
+          if (result.modifiedCount > 0) {
+            const updatedWord = await Words.findOne({ word: element.word });
+            return updatedWord;
           }
-        );
-      });
-      res.status(200).json(arrWords);
+        })
+      );
+
+      const filteredWords = updatedWords.filter((word) => word !== undefined);
+
+      console.log(`Updated ${filteredWords.length} document(s)`);
+      res.status(200).json(filteredWords);
     } catch (error) {
       res.status(500).json(error);
     }
@@ -91,15 +103,24 @@ const wordController = {
 
   getListWords: async (req: Request, res: Response) => {
     try {
-      const { page = 0, limit = 1000, subject = "" } = req.query || {};
+      const {
+        page = 0,
+        limit = 1000,
+        subject = "",
+        subjects = [],
+      } = req.query as IDataFilterWord;
       const numberSkip = Number(page) * Number(limit);
       let dataWords;
       if (subject === "ALL") {
         dataWords = await Words.find()
           .limit(Number(limit))
           .skip(Number(numberSkip));
-      } else if (subject === "BASIC") {
-        dataWords = await Words.find({ topics: { $regex: subject } })
+      } else if (subjects.length > 0) {
+        dataWords = await Words.find({
+          topics: {
+            $in: subjects.map((value) => new RegExp(value, "i")),
+          },
+        })
           .limit(Number(limit))
           .skip(Number(numberSkip));
       } else {
@@ -113,6 +134,7 @@ const wordController = {
       res.status(500).json(error);
     }
   },
+
   getListVocabularySubjects: async (req: Request, res: Response) => {
     const { course = "" } = req.query || {};
     try {
@@ -129,6 +151,9 @@ const wordController = {
             hrefImg: `Pack ${i + 1}`,
           });
         }
+      } else if (course === "ALL") {
+        const dataSubject = await VocabularySubjects.find();
+        listVocabularySubjects = dataSubject;
       } else {
         const dataSubject = await VocabularySubjects.find({
           tag: { $regex: course },
@@ -320,6 +345,9 @@ const wordController = {
       if (!updatedUser) {
         return res.status(404).json({ message: "User not found" });
       }
+      let hierarchicalArrayOfWords: number[] = getHierarchicalArrayOfWords(
+        updatedUser.wordsLearned as IWordLeaned[]
+      ); // example: hierarchicalArrayOfWords=[10,13,20,89];
       const dataUser: IUser = {
         id: updatedUser._id.toString(),
         username: updatedUser.username,
@@ -329,6 +357,7 @@ const wordController = {
         facebookId: updatedUser.facebookId,
         techLogin: updatedUser.techLogin,
         courseLearned: updatedUser.courseLearned,
+        hierarchicalArrayOfWords,
       };
       res.status(200).json(dataUser);
     } catch (err) {
@@ -351,13 +380,13 @@ const wordController = {
      */
 
     try {
-      // const { cookie = "" } = req.headers || {};
-      // const token = cookie.split("access_token=")[1] || "";
-      // const decodedToken = jwt.verify(token, process.env.JWT_KEY) as {
-      //   id: string;
-      // };
-      // const { id } = decodedToken;
-      const dataUser = await Users.findById("6443f150b2c0d4108437beca");
+      const { cookie = "" } = req.headers || {};
+      const token = cookie.split("access_token=")[1] || "";
+      const decodedToken = jwt.verify(token, process.env.JWT_KEY) as {
+        id: string;
+      };
+      const { id } = decodedToken;
+      const dataUser = await Users.findById(id);
       if (!!dataUser) {
         const { wordsLearned = [] } = dataUser || {};
         const sortedWordsLearned = wordsLearned.sort(

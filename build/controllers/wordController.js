@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const models_1 = require("../models");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const commonUtils_1 = require("../utils/commonUtils");
 const wordController = {
     addListWordFromExcel: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -36,23 +38,19 @@ const wordController = {
     updateListWord: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const arrWords = req.body;
-            arrWords.forEach((element) => __awaiter(void 0, void 0, void 0, function* () {
-                models_1.Words.updateOne({
-                    word: element.word,
-                    topics: { $not: { $elemMatch: { $in: element.topics } } }, // when updating will check the value in topics if exist then no more update
-                }, {
-                    $set: { pos: element.type, definition: element.meaning },
-                    $addToSet: { topics: { $each: element.topics } },
-                }, { upsert: true }, (err, result) => {
-                    if (err) {
-                        console.log(`Error: ${err}`);
-                    }
-                    else {
-                        console.log(`Updated ${result.modifiedCount} document(s)`);
-                    }
-                });
-            }));
-            res.status(200).json(arrWords);
+            console.log("🚀 ~ file: wordController.ts:46 ~ updateListWord: ~ arrWords:", arrWords);
+            const updatedWords = yield Promise.all(arrWords.map((element) => __awaiter(void 0, void 0, void 0, function* () {
+                const result = yield models_1.Words.updateOne({ word: element.word }, {
+                    $set: Object.assign({}, element),
+                }, { upsert: true });
+                if (result.modifiedCount > 0) {
+                    const updatedWord = yield models_1.Words.findOne({ word: element.word });
+                    return updatedWord;
+                }
+            })));
+            const filteredWords = updatedWords.filter((word) => word !== undefined);
+            console.log(`Updated ${filteredWords.length} document(s)`);
+            res.status(200).json(filteredWords);
         }
         catch (error) {
             res.status(500).json(error);
@@ -84,7 +82,7 @@ const wordController = {
     }),
     getListWords: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { page = 0, limit = 1000, subject = "" } = req.query || {};
+            const { page = 0, limit = 1000, subject = "", subjects = [], } = req.query;
             const numberSkip = Number(page) * Number(limit);
             let dataWords;
             if (subject === "ALL") {
@@ -92,8 +90,12 @@ const wordController = {
                     .limit(Number(limit))
                     .skip(Number(numberSkip));
             }
-            else if (subject === "BASIC") {
-                dataWords = yield models_1.Words.find({ topics: { $regex: subject } })
+            else if (subjects.length > 0) {
+                dataWords = yield models_1.Words.find({
+                    topics: {
+                        $in: subjects.map((value) => new RegExp(value, "i")),
+                    },
+                })
                     .limit(Number(limit))
                     .skip(Number(numberSkip));
             }
@@ -124,6 +126,10 @@ const wordController = {
                         hrefImg: `Pack ${i + 1}`,
                     });
                 }
+            }
+            else if (course === "ALL") {
+                const dataSubject = yield models_1.VocabularySubjects.find();
+                listVocabularySubjects = dataSubject;
             }
             else {
                 const dataSubject = yield models_1.VocabularySubjects.find({
@@ -295,6 +301,7 @@ const wordController = {
             if (!updatedUser) {
                 return res.status(404).json({ message: "User not found" });
             }
+            let hierarchicalArrayOfWords = (0, commonUtils_1.getHierarchicalArrayOfWords)(updatedUser.wordsLearned); // example: hierarchicalArrayOfWords=[10,13,20,89];
             const dataUser = {
                 id: updatedUser._id.toString(),
                 username: updatedUser.username,
@@ -304,6 +311,7 @@ const wordController = {
                 facebookId: updatedUser.facebookId,
                 techLogin: updatedUser.techLogin,
                 courseLearned: updatedUser.courseLearned,
+                hierarchicalArrayOfWords,
             };
             res.status(200).json(dataUser);
         }
@@ -325,13 +333,11 @@ const wordController = {
          * with each vocabulary review will get 100 words to review
          */
         try {
-            // const { cookie = "" } = req.headers || {};
-            // const token = cookie.split("access_token=")[1] || "";
-            // const decodedToken = jwt.verify(token, process.env.JWT_KEY) as {
-            //   id: string;
-            // };
-            // const { id } = decodedToken;
-            const dataUser = yield models_1.Users.findById("6443f150b2c0d4108437beca");
+            const { cookie = "" } = req.headers || {};
+            const token = cookie.split("access_token=")[1] || "";
+            const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_KEY);
+            const { id } = decodedToken;
+            const dataUser = yield models_1.Users.findById(id);
             if (!!dataUser) {
                 const { wordsLearned = [] } = dataUser || {};
                 const sortedWordsLearned = wordsLearned.sort((a, b) => (b.lastTimeReview || 0) - (a.lastTimeReview || 0));

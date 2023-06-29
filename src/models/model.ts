@@ -64,7 +64,15 @@ const SchemaWords = new mongoose.Schema({
     type: String,
   },
   examples: {
-    type: [String],
+    type: [
+      {
+        word: { type: String },
+        type: { type: String },
+        translation: { type: String },
+        example: { type: String },
+        translateExample: { type: String },
+      },
+    ],
   },
   customExamples: {
     type: [String],
