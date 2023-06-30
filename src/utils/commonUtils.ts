@@ -44,3 +44,24 @@ export function getHierarchicalArrayOfWords(
   }
   return hierarchicalArrayOfWords;
 }
+export function calculateLevelWord(
+  numberOfReviewCorrect: number,
+  numberOfReview: number
+) {
+  const hierarchyTable = {
+    level1: 0, // Recall
+    level2: 0.25, // Retention,
+    level3: 0.5, // Mastery,
+    level4: 0.75, // On-demand
+  };
+  const level = numberOfReviewCorrect / numberOfReview;
+  if (level >= hierarchyTable.level1 && level < hierarchyTable.level2) {
+    return 1;
+  } else if (level >= hierarchyTable.level2 && level < hierarchyTable.level3) {
+    return 2;
+  } else if (level >= hierarchyTable.level3 && level < hierarchyTable.level4) {
+    return 3;
+  } else if (level >= hierarchyTable.level4) {
+    return 4;
+  }
+}

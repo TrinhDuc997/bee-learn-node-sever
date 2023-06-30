@@ -262,14 +262,14 @@ const wordController = {
                 });
             }
             newWordsLearned.forEach((element) => {
-                const newItem = wordsLearned.find((i) => i.word === element.word);
-                if (!!newItem) {
-                    const updateFilter = { _id: id, "wordsLearned.word": newItem.word };
+                const item = wordsLearned.find((i) => i.word === element.word);
+                if (!!item) {
+                    const updateFilter = { _id: id, "wordsLearned.word": item.word };
                     const update = {
                         $set: {
-                            "wordsLearned.$.numberOfReview": (newItem.numberOfReview || 0) + element.numberOfReview,
-                            "wordsLearned.$.numberOfReviewCorrect": (newItem.numberOfReviewCorrect || 0) +
-                                element.numberOfReviewCorrect,
+                            "wordsLearned.$.numberOfReview": element.numberOfReview,
+                            "wordsLearned.$.numberOfReviewCorrect": element.numberOfReviewCorrect,
+                            "wordsLearned.$.lastTimeReview": Date.now(),
                         },
                     };
                     models_1.Users.updateOne(updateFilter, update, function (err, updateResult) {
@@ -333,6 +333,7 @@ const wordController = {
          * with each vocabulary review will get 100 words to review
          */
         try {
+            const { limit = 100 } = req.query;
             const { cookie = "" } = req.headers || {};
             const token = cookie.split("access_token=")[1] || "";
             const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_KEY);
@@ -340,8 +341,14 @@ const wordController = {
             const dataUser = yield models_1.Users.findById(id);
             if (!!dataUser) {
                 const { wordsLearned = [] } = dataUser || {};
-                const sortedWordsLearned = wordsLearned.sort((a, b) => (b.lastTimeReview || 0) - (a.lastTimeReview || 0));
-                const filteredWordsLearned = sortedWordsLearned.slice(0, 100);
+                const sortedWordsLearned = wordsLearned.sort((a, b) => (a.lastTimeReview || 0) - (b.lastTimeReview || 0));
+                let filteredWordsLearned = [];
+                if (limit === "UNLIMIT") {
+                    filteredWordsLearned = sortedWordsLearned;
+                }
+                else {
+                    filteredWordsLearned = sortedWordsLearned.slice(0, parseInt(limit));
+                }
                 const dataWords = yield models_1.Words.find({
                     word: { $in: filteredWordsLearned.map((i) => i.word) },
                 });
@@ -362,6 +369,7 @@ const wordController = {
                             definitions: dataWord.definitions,
                             idOfWordLearned: item._id,
                             word: item.word,
+                            levelOfWord: (0, commonUtils_1.calculateLevelWord)(item.numberOfReviewCorrect, item.numberOfReview),
                             numberOfReview: item.numberOfReview,
                             numberOfReviewCorrect: item.numberOfReviewCorrect,
                             lastTimeReview: item.lastTimeReview,

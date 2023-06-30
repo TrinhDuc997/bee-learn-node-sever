@@ -9,7 +9,10 @@ import { Request, Response } from "express";
 import axios from "axios";
 import { Users, VocabularySubjects, Words } from "../models";
 import jwt from "jsonwebtoken";
-import { getHierarchicalArrayOfWords } from "../utils/commonUtils";
+import {
+  calculateLevelWord,
+  getHierarchicalArrayOfWords,
+} from "../utils/commonUtils";
 
 declare var process: {
   env: {
@@ -295,16 +298,15 @@ const wordController = {
       }
 
       newWordsLearned.forEach((element) => {
-        const newItem = wordsLearned.find((i) => i.word === element.word);
-        if (!!newItem) {
-          const updateFilter = { _id: id, "wordsLearned.word": newItem.word };
+        const item = wordsLearned.find((i) => i.word === element.word);
+        if (!!item) {
+          const updateFilter = { _id: id, "wordsLearned.word": item.word };
           const update = {
             $set: {
-              "wordsLearned.$.numberOfReview":
-                (newItem.numberOfReview || 0) + element.numberOfReview,
+              "wordsLearned.$.numberOfReview": element.numberOfReview,
               "wordsLearned.$.numberOfReviewCorrect":
-                (newItem.numberOfReviewCorrect || 0) +
                 element.numberOfReviewCorrect,
+              "wordsLearned.$.lastTimeReview": Date.now(),
             },
           };
 
@@ -380,6 +382,7 @@ const wordController = {
      */
 
     try {
+      const { limit = 100 } = req.query;
       const { cookie = "" } = req.headers || {};
       const token = cookie.split("access_token=")[1] || "";
       const decodedToken = jwt.verify(token, process.env.JWT_KEY) as {
@@ -390,12 +393,18 @@ const wordController = {
       if (!!dataUser) {
         const { wordsLearned = [] } = dataUser || {};
         const sortedWordsLearned = wordsLearned.sort(
-          (a, b) => (b.lastTimeReview || 0) - (a.lastTimeReview || 0)
+          (a, b) => (a.lastTimeReview || 0) - (b.lastTimeReview || 0)
         );
-        const filteredWordsLearned = sortedWordsLearned.slice(
-          0,
-          100
-        ) as IWordLeaned[];
+        let filteredWordsLearned = [];
+        if (limit === "UNLIMIT") {
+          filteredWordsLearned = sortedWordsLearned as IWordLeaned[];
+        } else {
+          filteredWordsLearned = sortedWordsLearned.slice(
+            0,
+            parseInt(limit as string)
+          ) as IWordLeaned[];
+        }
+
         const dataWords = await Words.find({
           word: { $in: filteredWordsLearned.map((i) => i.word) },
         });
@@ -418,6 +427,10 @@ const wordController = {
 
               idOfWordLearned: item._id,
               word: item.word,
+              levelOfWord: calculateLevelWord(
+                item.numberOfReviewCorrect,
+                item.numberOfReview
+              ),
               numberOfReview: item.numberOfReview,
               numberOfReviewCorrect: item.numberOfReviewCorrect,
               lastTimeReview: item.lastTimeReview,

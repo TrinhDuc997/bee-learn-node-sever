@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getHierarchicalArrayOfWords = void 0;
+exports.calculateLevelWord = exports.getHierarchicalArrayOfWords = void 0;
 function getHierarchicalArrayOfWords(wordsLearned) {
     let hierarchicalArrayOfWords = [], quantityWordslevel1 = 0, quantityWordslevel2 = 0, quantityWordslevel3 = 0, quantityWordslevel4 = 0;
     if (!!wordsLearned) {
@@ -38,3 +38,25 @@ function getHierarchicalArrayOfWords(wordsLearned) {
     return hierarchicalArrayOfWords;
 }
 exports.getHierarchicalArrayOfWords = getHierarchicalArrayOfWords;
+function calculateLevelWord(numberOfReviewCorrect, numberOfReview) {
+    const hierarchyTable = {
+        level1: 0,
+        level2: 0.25,
+        level3: 0.5,
+        level4: 0.75, // On-demand
+    };
+    const level = numberOfReviewCorrect / numberOfReview;
+    if (level >= hierarchyTable.level1 && level < hierarchyTable.level2) {
+        return 1;
+    }
+    else if (level >= hierarchyTable.level2 && level < hierarchyTable.level3) {
+        return 2;
+    }
+    else if (level >= hierarchyTable.level3 && level < hierarchyTable.level4) {
+        return 3;
+    }
+    else if (level >= hierarchyTable.level4) {
+        return 4;
+    }
+}
+exports.calculateLevelWord = calculateLevelWord;
