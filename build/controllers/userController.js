@@ -99,6 +99,7 @@ const UserController = {
                 const dataUser = {
                     id: user._id,
                     username: user.username || "",
+                    role: user.role || "",
                     name: user.name || "",
                 };
                 const token = jsonwebtoken_1.default.sign({ timeLogin: Date.now(), id: user._id }, process.env.JWT_KEY);
@@ -126,9 +127,10 @@ const UserController = {
                 let hierarchicalArrayOfWords = (0, commonUtils_1.getHierarchicalArrayOfWords)(user.wordsLearned); // example: hierarchicalArrayOfWords=[10,13,20,89];
                 const dataUser = {
                     id: user._id.toString(),
-                    username: user.username,
+                    username: user.username || "",
                     email: user.email,
-                    name: user.name,
+                    name: user.name || "",
+                    role: user.role,
                     googleId: user.googleId,
                     facebookId: user.facebookId,
                     techLogin: user.techLogin,

@@ -314,9 +314,9 @@ const wordController = {
             })); // example: hierarchicalArrayOfWords=[10,13,20,89];
             const dataUser = {
                 id: updatedUser._id.toString(),
-                username: updatedUser.username,
+                username: updatedUser.username || "",
                 email: updatedUser.email,
-                name: updatedUser.name,
+                name: updatedUser.name || "",
                 googleId: updatedUser.googleId,
                 facebookId: updatedUser.facebookId,
                 techLogin: updatedUser.techLogin,

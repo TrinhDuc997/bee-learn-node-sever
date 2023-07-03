@@ -116,6 +116,7 @@ const UserController = {
         const dataUser = {
           id: user._id,
           username: user.username || "",
+          role: user.role || "",
           name: user.name || "",
         };
         const token: string = jwt.sign(
@@ -148,9 +149,10 @@ const UserController = {
         ); // example: hierarchicalArrayOfWords=[10,13,20,89];
         const dataUser: IUser = {
           id: user._id.toString(),
-          username: user.username,
+          username: user.username || "",
           email: user.email,
-          name: user.name,
+          name: user.name || "",
+          role: user.role,
           googleId: user.googleId,
           facebookId: user.facebookId,
           techLogin: user.techLogin,

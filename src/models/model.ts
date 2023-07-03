@@ -142,6 +142,7 @@ const usersSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     username: { type: String, required: true, unique: true },
+    role: { type: String },
     email: {
       type: String,
       unique: true,

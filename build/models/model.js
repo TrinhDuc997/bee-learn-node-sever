@@ -133,6 +133,7 @@ exports.VocabularySubjects = mongoose_1.default.model("VocabularySubjects", sche
 const usersSchema = new mongoose_1.default.Schema({
     name: { type: String, required: true },
     username: { type: String, required: true, unique: true },
+    role: { type: String },
     email: {
         type: String,
         unique: true,
