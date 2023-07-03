@@ -348,7 +348,11 @@ const wordController = {
         return res.status(404).json({ message: "User not found" });
       }
       let hierarchicalArrayOfWords: number[] = getHierarchicalArrayOfWords(
-        (updatedUser.wordsLearned as IWordLeaned[]).map((item) => {
+        (
+          (isLearnNewWord
+            ? [...updatedUser.wordsLearned]
+            : updatedUser.wordsLearned) as IWordLeaned[]
+        ).map((item) => {
           const newData = newWordsLearned.find((i) => i.word === item.word);
           if (newData) {
             return {
