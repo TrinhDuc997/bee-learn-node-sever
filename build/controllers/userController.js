@@ -18,11 +18,12 @@ const commonUtils_1 = require("../utils/commonUtils");
 const UserController = {
     addUser: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { name, email, password, googleId, facebookId, techLogin } = req.body;
+            const { name, username, email, password, googleId, facebookId, techLogin, } = req.body;
             const token = jsonwebtoken_1.default.sign({ email }, process.env.JWT_KEY);
             // Create a new User document
             const newUser = new models_1.Users({
                 name,
+                username,
                 email,
                 password,
                 googleId,
@@ -36,8 +37,16 @@ const UserController = {
             res.status(201).json(newUser);
         }
         catch (err) {
-            console.log("Error adding user:", err);
-            res.status(500).json({ message: "Internal server error" });
+            console.log("🚀 ~ file: userController.ts:48 ~ addUser: ~ err:", err);
+            if (err.code === 11000) {
+                res.status(401).json({
+                    message: `duplicate key error collection: ${Object.keys(err.keyValue || {})}`,
+                    err,
+                });
+            }
+            else {
+                res.status(500).json({ message: "Internal server error", err });
+            }
         }
     }),
     updateUser: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -88,6 +97,7 @@ const UserController = {
             if (!!user) {
                 const { tokens = [] } = user;
                 const dataUser = {
+                    id: user._id,
                     username: user.username || "",
                     name: user.name || "",
                 };

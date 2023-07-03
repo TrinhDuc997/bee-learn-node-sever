@@ -133,7 +133,18 @@ exports.VocabularySubjects = mongoose_1.default.model("VocabularySubjects", sche
 const usersSchema = new mongoose_1.default.Schema({
     name: { type: String, required: true },
     username: { type: String, required: true, unique: true },
-    email: { type: String, unique: true },
+    email: {
+        type: String,
+        unique: true,
+        sparse: true,
+        required: false, // Cho phép email không bắt buộc
+        // validate: {
+        //   validator: function (value: any) {
+        //     return value !== null;
+        //   },
+        //   message: "Email must be unique if not null or undefined.",
+        // },
+    },
     password: { type: String, required: true },
     googleId: { type: String, default: null },
     facebookId: { type: String, default: null },
@@ -144,7 +155,7 @@ const usersSchema = new mongoose_1.default.Schema({
     wordsLearned: {
         type: [
             {
-                word: { type: String, unique: true, required: true },
+                word: { type: String },
                 numberOfReview: { type: Number },
                 numberOfReviewCorrect: { type: Number },
                 lastTimeReview: { type: Number },
@@ -154,8 +165,8 @@ const usersSchema = new mongoose_1.default.Schema({
     courseLearned: {
         type: [
             {
-                course: { type: String, unique: true, required: true },
-                subject: { type: String, unique: true, required: true },
+                course: { type: String },
+                subject: { type: String },
                 numberPacks: {
                     type: [Number],
                 },

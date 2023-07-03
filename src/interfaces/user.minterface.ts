@@ -19,7 +19,7 @@ interface Token {
 }
 
 export interface ICourseLearned {
-  course: string;
-  subject: string;
+  course?: string;
+  subject?: string;
   numberPacks?: number[];
 }

@@ -142,7 +142,18 @@ const usersSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     username: { type: String, required: true, unique: true },
-    email: { type: String, unique: true },
+    email: {
+      type: String,
+      unique: true,
+      sparse: true, // allow values null
+      required: false, // Cho phép email không bắt buộc
+      // validate: {
+      //   validator: function (value: any) {
+      //     return value !== null;
+      //   },
+      //   message: "Email must be unique if not null or undefined.",
+      // },
+    },
     password: { type: String, required: true },
     googleId: { type: String, default: null },
     facebookId: { type: String, default: null },
@@ -153,7 +164,7 @@ const usersSchema = new mongoose.Schema(
     wordsLearned: {
       type: [
         {
-          word: { type: String, unique: true, required: true },
+          word: { type: String },
           numberOfReview: { type: Number },
           numberOfReviewCorrect: { type: Number },
           lastTimeReview: { type: Number },
@@ -163,8 +174,8 @@ const usersSchema = new mongoose.Schema(
     courseLearned: {
       type: [
         {
-          course: { type: String, unique: true, required: true },
-          subject: { type: String, unique: true, required: true },
+          course: { type: String },
+          subject: { type: String },
           numberPacks: {
             type: [Number],
           },
@@ -174,6 +185,5 @@ const usersSchema = new mongoose.Schema(
   },
   { collection: "Users" }
 );
-
 // create a new model based on the schema
 export const Users = mongoose.model("Users", usersSchema);

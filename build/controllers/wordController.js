@@ -301,7 +301,15 @@ const wordController = {
             if (!updatedUser) {
                 return res.status(404).json({ message: "User not found" });
             }
-            let hierarchicalArrayOfWords = (0, commonUtils_1.getHierarchicalArrayOfWords)(updatedUser.wordsLearned); // example: hierarchicalArrayOfWords=[10,13,20,89];
+            let hierarchicalArrayOfWords = (0, commonUtils_1.getHierarchicalArrayOfWords)(updatedUser.wordsLearned.map((item) => {
+                const newData = newWordsLearned.find((i) => i.word === item.word);
+                if (newData) {
+                    return Object.assign(Object.assign({}, item), { numberOfReview: newData.numberOfReview, numberOfReviewCorrect: newData.numberOfReviewCorrect });
+                }
+                else {
+                    return item;
+                }
+            })); // example: hierarchicalArrayOfWords=[10,13,20,89];
             const dataUser = {
                 id: updatedUser._id.toString(),
                 username: updatedUser.username,

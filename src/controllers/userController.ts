@@ -16,13 +16,21 @@ declare var process: {
 const UserController = {
   addUser: async (req: Request, res: Response) => {
     try {
-      const { name, email, password, googleId, facebookId, techLogin } =
-        req.body;
+      const {
+        name,
+        username,
+        email,
+        password,
+        googleId,
+        facebookId,
+        techLogin,
+      } = req.body;
 
       const token = jwt.sign({ email }, process.env.JWT_KEY);
       // Create a new User document
       const newUser = new Users({
         name,
+        username,
         email,
         password,
         googleId,
@@ -36,9 +44,18 @@ const UserController = {
 
       // Return the new User document as the response
       res.status(201).json(newUser);
-    } catch (err) {
-      console.log("Error adding user:", err);
-      res.status(500).json({ message: "Internal server error" });
+    } catch (err: any) {
+      console.log("🚀 ~ file: userController.ts:48 ~ addUser: ~ err:", err);
+      if (err.code === 11000) {
+        res.status(401).json({
+          message: `duplicate key error collection: ${Object.keys(
+            err.keyValue || {}
+          )}`,
+          err,
+        });
+      } else {
+        res.status(500).json({ message: "Internal server error", err });
+      }
     }
   },
 
@@ -97,6 +114,7 @@ const UserController = {
       if (!!user) {
         const { tokens = [] } = user;
         const dataUser = {
+          id: user._id,
           username: user.username || "",
           name: user.name || "",
         };
