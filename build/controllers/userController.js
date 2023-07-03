@@ -96,11 +96,14 @@ const UserController = {
             }).exec();
             if (!!user) {
                 const { tokens = [] } = user;
+                let hierarchicalArrayOfWords = (0, commonUtils_1.getHierarchicalArrayOfWords)(user.wordsLearned);
                 const dataUser = {
                     id: user._id,
                     username: user.username || "",
                     role: user.role || "",
                     name: user.name || "",
+                    courseLearned: user.courseLearned,
+                    hierarchicalArrayOfWords,
                 };
                 const token = jsonwebtoken_1.default.sign({ timeLogin: Date.now(), id: user._id }, process.env.JWT_KEY);
                 const newTokens = [token, ...tokens];

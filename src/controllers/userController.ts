@@ -113,11 +113,16 @@ const UserController = {
 
       if (!!user) {
         const { tokens = [] } = user;
+        let hierarchicalArrayOfWords: number[] = getHierarchicalArrayOfWords(
+          user.wordsLearned as IWordLeaned[]
+        );
         const dataUser = {
           id: user._id,
           username: user.username || "",
           role: user.role || "",
           name: user.name || "",
+          courseLearned: user.courseLearned,
+          hierarchicalArrayOfWords,
         };
         const token: string = jwt.sign(
           { timeLogin: Date.now(), id: user._id },
