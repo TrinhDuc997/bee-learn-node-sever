@@ -116,22 +116,27 @@ const UserController = {
         let hierarchicalArrayOfWords: number[] = getHierarchicalArrayOfWords(
           user.wordsLearned as IWordLeaned[]
         );
-        const dataUser = {
-          id: user._id,
+        const token: string = jwt.sign(
+          { timeLogin: Date.now(), id: user._id },
+          process.env.JWT_KEY
+        );
+        const dataUser: IUser = {
+          id: user._id.toString(),
           username: user.username || "",
           role: user.role || "",
           name: user.name || "",
           courseLearned: user.courseLearned,
           hierarchicalArrayOfWords,
+          googleId: user.googleId,
+          facebookId: user.facebookId,
+          techLogin: user.techLogin,
+          token,
         };
-        const token: string = jwt.sign(
-          { timeLogin: Date.now(), id: user._id },
-          process.env.JWT_KEY
-        );
+
         const newTokens = [token, ...tokens];
         user.set("tokens", newTokens);
         await user.save();
-        res.status(200).json({ ...dataUser, token });
+        res.status(200).json(dataUser);
       } else {
         res.status(404).json({ username, tokens: "", message: "LoginFalse" });
       }

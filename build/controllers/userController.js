@@ -97,19 +97,23 @@ const UserController = {
             if (!!user) {
                 const { tokens = [] } = user;
                 let hierarchicalArrayOfWords = (0, commonUtils_1.getHierarchicalArrayOfWords)(user.wordsLearned);
+                const token = jsonwebtoken_1.default.sign({ timeLogin: Date.now(), id: user._id }, process.env.JWT_KEY);
                 const dataUser = {
-                    id: user._id,
+                    id: user._id.toString(),
                     username: user.username || "",
                     role: user.role || "",
                     name: user.name || "",
                     courseLearned: user.courseLearned,
                     hierarchicalArrayOfWords,
+                    googleId: user.googleId,
+                    facebookId: user.facebookId,
+                    techLogin: user.techLogin,
+                    token,
                 };
-                const token = jsonwebtoken_1.default.sign({ timeLogin: Date.now(), id: user._id }, process.env.JWT_KEY);
                 const newTokens = [token, ...tokens];
                 user.set("tokens", newTokens);
                 yield user.save();
-                res.status(200).json(Object.assign(Object.assign({}, dataUser), { token }));
+                res.status(200).json(dataUser);
             }
             else {
                 res.status(404).json({ username, tokens: "", message: "LoginFalse" });
