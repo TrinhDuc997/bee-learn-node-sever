@@ -125,8 +125,8 @@ const UserController = {
     }),
     profile: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const authHeader = req.headers["authorization"];
-            const token = (authHeader && authHeader.split(" ")[1]) || "";
+            const authHeader = req.headers["cookie"];
+            const token = (authHeader && authHeader.split("=")[1]) || "";
             const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_KEY);
             const { id } = decodedToken;
             const user = yield models_1.Users.findOne({ _id: id }).exec();

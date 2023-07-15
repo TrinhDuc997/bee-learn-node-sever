@@ -146,8 +146,8 @@ const UserController = {
   },
   profile: async (req: Request, res: Response) => {
     try {
-      const authHeader = req.headers["authorization"];
-      const token = (authHeader && authHeader.split(" ")[1]) || "";
+      const authHeader = req.headers["cookie"];
+      const token = (authHeader && authHeader.split("=")[1]) || "";
       const decodedToken = jwt.verify(token, process.env.JWT_KEY) as {
         id: string;
       };

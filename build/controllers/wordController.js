@@ -345,7 +345,7 @@ const wordController = {
         try {
             const { limit = 100 } = req.query;
             const { cookie = "" } = req.headers || {};
-            const token = cookie.split("access_token=")[1] || "";
+            const token = cookie.split("=")[1] || "";
             const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_KEY);
             const { id } = decodedToken;
             const dataUser = yield models_1.Users.findById(id);

@@ -399,7 +399,7 @@ const wordController = {
     try {
       const { limit = 100 } = req.query;
       const { cookie = "" } = req.headers || {};
-      const token = cookie.split("access_token=")[1] || "";
+      const token = cookie.split("=")[1] || "";
       const decodedToken = jwt.verify(token, process.env.JWT_KEY) as {
         id: string;
       };

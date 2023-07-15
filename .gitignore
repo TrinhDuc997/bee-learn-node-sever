@@ -1,2 +1,5 @@
 .env
 node_modules
+src/playgroundMongoDB/Users.json
+src/playgroundMongoDB/VocabularySubjects.json
+src/playgroundMongoDB/wordsFilterTopicsExist.json
