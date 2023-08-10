@@ -1,4 +1,4 @@
-import { IUser, IWordLeaned } from "../interfaces";
+import { FieldFilter, IUser, IWordLeaned } from "../interfaces";
 import { Users } from "../models";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
@@ -38,14 +38,17 @@ const UserController = {
         techLogin,
         tokens: [token],
       });
+      const checkExistedUser = await Users.findOne({ username: username });
 
-      // Save the new User document to the database
-      await newUser.save();
-
-      // Return the new User document as the response
-      res.status(201).json(newUser);
+      if (!checkExistedUser) {
+        // Save the new User document to the database
+        await newUser.save();
+        // Return the new User document as the response
+        res.status(201).json(newUser);
+      } else {
+        throw { code: 11000 };
+      }
     } catch (err: any) {
-      console.log("🚀 ~ file: userController.ts:48 ~ addUser: ~ err:", err);
       if (err.code === 11000) {
         res.status(401).json({
           message: `duplicate key error collection: ${Object.keys(
@@ -105,11 +108,47 @@ const UserController = {
 
   login: async (req: Request, res: Response) => {
     try {
-      const { username = "", password = "" } = req.body || {};
-      const user = await Users.findOne({
-        username: username,
-        password: password,
-      }).exec();
+      const {
+        username = "",
+        password = "",
+        token,
+        loginBy = "",
+      } = req.body || {};
+
+      let user;
+      if (loginBy === "google" || loginBy === "facebook") {
+        const {
+          id,
+          name = "",
+          email = "",
+          image = "",
+        } = jwt.verify(token, process.env.JWT_KEY) as IUser;
+
+        let filter: FieldFilter = { _id: id };
+        if (loginBy === "google") {
+          filter = { googleId: id };
+        } else if (loginBy === "facebook") {
+          filter = { facebookId: id };
+        }
+        user = await Users.findOne(filter);
+        if (!user) {
+          // Create a new User document
+          const newUser = new Users({
+            name,
+            email,
+            image,
+            googleId: loginBy === "google" ? id : null,
+            facebookId: loginBy === "facebook" ? id : null,
+          });
+          // Save the new User document to the database
+          user = await newUser.save();
+        }
+      } else {
+        user = await Users.findOne({
+          username: username,
+          password: password,
+        }).exec();
+      }
 
       if (!!user) {
         const { tokens = [] } = user;
@@ -138,7 +177,7 @@ const UserController = {
         await user.save();
         res.status(200).json(dataUser);
       } else {
-        res.status(404).json({ username, tokens: "", message: "LoginFalse" });
+        res.status(401).json({ username, tokens: "", message: "LoginFalse" });
       }
     } catch (error) {
       res.status(500).json(error);
@@ -146,7 +185,7 @@ const UserController = {
   },
   profile: async (req: Request, res: Response) => {
     try {
-      const authHeader = req.headers["cookie"];
+      const authHeader = req.headers["authorization"];
       const token = (authHeader && authHeader.split("=")[1]) || "";
       const decodedToken = jwt.verify(token, process.env.JWT_KEY) as {
         id: string;

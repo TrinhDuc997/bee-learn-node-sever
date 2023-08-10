@@ -7,6 +7,7 @@ export interface IUser {
   email?: string;
   role?: string;
   token?: string;
+  image?: string;
   password?: string;
   googleId?: string;
   facebookId?: string;
@@ -25,3 +26,9 @@ export interface ICourseLearned {
   subject?: string;
   numberPacks?: number[];
 }
+
+export type FieldFilter = {
+  _id?: string;
+  googleId?: string;
+  facebookId?: string;
+};

@@ -29,9 +29,9 @@ const wordController = {
     try {
       console.log("req", req.body);
       const arrWords = req.body;
-      arrWords.forEach(async (element: IWord) => {
+      arrWords.forEach((element: IWord) => {
         const newWord = new Words(element);
-        await newWord.save((err: any) => {
+        newWord.save((err: any) => {
           if (err) {
             console.log(err.message);
           }
@@ -46,11 +46,6 @@ const wordController = {
   updateListWord: async (req: Request, res: Response) => {
     try {
       const arrWords = req.body as IWord[];
-      console.log(
-        "🚀 ~ file: wordController.ts:46 ~ updateListWord: ~ arrWords:",
-        arrWords
-      );
-
       const updatedWords = await Promise.all(
         arrWords.map(async (element) => {
           const result = await Words.updateOne(
@@ -398,8 +393,8 @@ const wordController = {
 
     try {
       const { limit = 100 } = req.query;
-      const { cookie = "" } = req.headers || {};
-      const token = cookie.split("=")[1] || "";
+      const { authorization = "" } = req.headers || {};
+      const token = authorization.split("=")[1] || "";
       const decodedToken = jwt.verify(token, process.env.JWT_KEY) as {
         id: string;
       };

@@ -141,21 +141,15 @@ export const VocabularySubjects = mongoose.model(
 const usersSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    username: { type: String, required: true, unique: true },
+    username: { type: String, sparse: true, required: false },
     role: { type: String },
     email: {
       type: String,
-      unique: true,
       sparse: true, // allow values null
       required: false, // Cho phép email không bắt buộc
-      // validate: {
-      //   validator: function (value: any) {
-      //     return value !== null;
-      //   },
-      //   message: "Email must be unique if not null or undefined.",
-      // },
     },
-    password: { type: String, required: true },
+    image: { type: String },
+    password: { type: String },
     googleId: { type: String, default: null },
     facebookId: { type: String, default: null },
     techLogin: { type: String, default: null },

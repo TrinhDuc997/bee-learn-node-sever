@@ -31,13 +31,18 @@ const UserController = {
                 techLogin,
                 tokens: [token],
             });
-            // Save the new User document to the database
-            yield newUser.save();
-            // Return the new User document as the response
-            res.status(201).json(newUser);
+            const checkExistedUser = yield models_1.Users.findOne({ username: username });
+            if (!checkExistedUser) {
+                // Save the new User document to the database
+                yield newUser.save();
+                // Return the new User document as the response
+                res.status(201).json(newUser);
+            }
+            else {
+                throw { code: 11000 };
+            }
         }
         catch (err) {
-            console.log("🚀 ~ file: userController.ts:48 ~ addUser: ~ err:", err);
             if (err.code === 11000) {
                 res.status(401).json({
                     message: `duplicate key error collection: ${Object.keys(err.keyValue || {})}`,
@@ -89,11 +94,37 @@ const UserController = {
     }),
     login: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { username = "", password = "" } = req.body || {};
-            const user = yield models_1.Users.findOne({
-                username: username,
-                password: password,
-            }).exec();
+            const { username = "", password = "", token, loginBy = "", } = req.body || {};
+            let user;
+            if (loginBy === "google" || loginBy === "facebook") {
+                const { id, name = "", email = "", image = "", } = jsonwebtoken_1.default.verify(token, process.env.JWT_KEY);
+                let filter = { _id: id };
+                if (loginBy === "google") {
+                    filter = { googleId: id };
+                }
+                else if (loginBy === "facebook") {
+                    filter = { facebookId: id };
+                }
+                user = yield models_1.Users.findOne(filter);
+                if (!user) {
+                    // Create a new User document
+                    const newUser = new models_1.Users({
+                        name,
+                        email,
+                        image,
+                        googleId: loginBy === "google" ? id : null,
+                        facebookId: loginBy === "facebook" ? id : null,
+                    });
+                    // Save the new User document to the database
+                    user = yield newUser.save();
+                }
+            }
+            else {
+                user = yield models_1.Users.findOne({
+                    username: username,
+                    password: password,
+                }).exec();
+            }
             if (!!user) {
                 const { tokens = [] } = user;
                 let hierarchicalArrayOfWords = (0, commonUtils_1.getHierarchicalArrayOfWords)(user.wordsLearned);
@@ -116,7 +147,7 @@ const UserController = {
                 res.status(200).json(dataUser);
             }
             else {
-                res.status(404).json({ username, tokens: "", message: "LoginFalse" });
+                res.status(401).json({ username, tokens: "", message: "LoginFalse" });
             }
         }
         catch (error) {
@@ -125,7 +156,7 @@ const UserController = {
     }),
     profile: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const authHeader = req.headers["cookie"];
+            const authHeader = req.headers["authorization"];
             const token = (authHeader && authHeader.split("=")[1]) || "";
             const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_KEY);
             const { id } = decodedToken;

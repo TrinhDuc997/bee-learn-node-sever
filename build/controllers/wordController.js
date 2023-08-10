@@ -21,14 +21,14 @@ const wordController = {
         try {
             console.log("req", req.body);
             const arrWords = req.body;
-            arrWords.forEach((element) => __awaiter(void 0, void 0, void 0, function* () {
+            arrWords.forEach((element) => {
                 const newWord = new models_1.Words(element);
-                yield newWord.save((err) => {
+                newWord.save((err) => {
                     if (err) {
                         console.log(err.message);
                     }
                 });
-            }));
+            });
             res.status(200).json(req.body);
         }
         catch (error) {
@@ -38,7 +38,6 @@ const wordController = {
     updateListWord: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const arrWords = req.body;
-            console.log("🚀 ~ file: wordController.ts:46 ~ updateListWord: ~ arrWords:", arrWords);
             const updatedWords = yield Promise.all(arrWords.map((element) => __awaiter(void 0, void 0, void 0, function* () {
                 const result = yield models_1.Words.updateOne({ word: element.word }, {
                     $set: Object.assign({}, element),
@@ -344,8 +343,8 @@ const wordController = {
          */
         try {
             const { limit = 100 } = req.query;
-            const { cookie = "" } = req.headers || {};
-            const token = cookie.split("=")[1] || "";
+            const { authorization = "" } = req.headers || {};
+            const token = authorization.split("=")[1] || "";
             const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_KEY);
             const { id } = decodedToken;
             const dataUser = yield models_1.Users.findById(id);
