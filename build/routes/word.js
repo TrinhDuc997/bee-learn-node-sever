@@ -23,5 +23,6 @@ router.get("/getListVocabularySubjects", wordController_1.default.getListVocabul
 router.put("/updateVocabularySubjects", wordController_1.default.updateVocabularySubjects);
 // Update Words User Learned
 router.put("/updateWordsUserLearned", wordController_1.default.updateWordsUserLearned);
+router.put("/importWordsUserLearned", wordController_1.default.importWordsUserLearned);
 router.get("/getListWordsToReview", wordController_1.default.getListWordsToReview);
 exports.default = router;

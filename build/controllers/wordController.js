@@ -213,9 +213,7 @@ const wordController = {
     }),
     updateWordsUserLearned: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const { id, isLearnNewWord } = req.body;
-            const newWordsLearned = req.body.wordsLeaned;
-            const newCourseLearned = req.body.courseLearned;
+            const { id, isLearnNewWord = false, wordsLearned: newWordsLearned = [], courseLearned: newCourseLearned = {}, isReturnWordLearned, isReviewWords = false, } = req.body;
             // Find the User document to update
             const userToUpdate = yield models_1.Users.findById(id);
             if (!userToUpdate) {
@@ -224,9 +222,7 @@ const wordController = {
             // Update the User document fields
             const { wordsLearned = [] } = userToUpdate || {};
             if (isLearnNewWord) {
-                models_1.Users.findOneAndUpdate(
-                // xử lý dữ liệu field courseLearned trong trường hợp học từ mới
-                {
+                const checkCourseLearnedExisted = yield models_1.Users.findOne({
                     _id: id,
                     courseLearned: {
                         $elemMatch: {
@@ -234,31 +230,56 @@ const wordController = {
                             subject: newCourseLearned.subject,
                         },
                     },
-                }, {
-                    $addToSet: {
-                        "courseLearned.$.numberPacks": {
-                            $each: newCourseLearned.numberPacks,
-                        },
-                    },
-                }, (err, user) => {
-                    if (err) {
-                        console.error(err);
-                    }
-                    else if (user) {
-                        console.log("Dữ liệu đã được cập nhật thành công");
-                    }
-                    else {
-                        // Không tìm thấy cặp course và subject không tồn tại thì thêm mới
-                        models_1.Users.findByIdAndUpdate(id, { $push: { courseLearned: newCourseLearned } }, (err) => {
-                            if (err) {
-                                console.error(err);
-                            }
-                            else {
-                                console.log("Dữ liệu đã được thêm thành công");
-                            }
-                        });
-                    }
                 });
+                if (!checkCourseLearnedExisted) {
+                    // The user hasn't learned this course yet => push new item to field courseLearned.
+                    models_1.Users.findOneAndUpdate({ _id: id }, { $push: { courseLearned: newCourseLearned } }, { returnDocument: "after" }, (err) => {
+                        if (err) {
+                            console.error(err);
+                        }
+                        else {
+                            console.log("Dữ liệu đã được thêm thành công");
+                        }
+                    });
+                }
+                else {
+                    models_1.Users.findOneAndUpdate({
+                        _id: id,
+                        courseLearned: {
+                            $elemMatch: {
+                                course: newCourseLearned.course,
+                                subject: newCourseLearned.subject,
+                            },
+                        },
+                    }, {
+                        $addToSet: {
+                            "courseLearned.$.numberPacks": {
+                                $each: newCourseLearned.numberPacks,
+                            },
+                        },
+                    }, { returnDocument: "after" }, (err, user) => {
+                        if (err) {
+                            console.error(err);
+                        }
+                        else if (user) {
+                            console.log("Dữ liệu đã được cập nhật thành công");
+                        }
+                        // else { ??? why do I use "Callback" and get data again by Users.findById(id) right after the update, I don't get new data;
+                        //   Users.findOneAndUpdate(
+                        //     { _id: id },
+                        //     { $push: { courseLearned: newCourseLearned } },
+                        //     { returnDocument: "after" },
+                        //     (err: any) => {
+                        //       if (err) {
+                        //         console.error(err);
+                        //       } else {
+                        //         console.log("Dữ liệu đã được thêm thành công");
+                        //       }
+                        //     }
+                        //   );
+                        // }
+                    });
+                }
             }
             newWordsLearned.forEach((element) => {
                 const item = wordsLearned.find((i) => i.word === element.word);
@@ -266,9 +287,12 @@ const wordController = {
                     const updateFilter = { _id: id, "wordsLearned.word": item.word };
                     const update = {
                         $set: {
+                            "wordsLearned.$.tagIds": element.tagIds,
                             "wordsLearned.$.numberOfReview": element.numberOfReview,
                             "wordsLearned.$.numberOfReviewCorrect": element.numberOfReviewCorrect,
-                            "wordsLearned.$.lastTimeReview": Date.now(),
+                            "wordsLearned.$.lastTimeReview": isReviewWords
+                                ? Date.now()
+                                : item.lastTimeReview,
                         },
                     };
                     models_1.Users.updateOne(updateFilter, update, function (err, updateResult) {
@@ -283,8 +307,10 @@ const wordController = {
                         $push: {
                             wordsLearned: {
                                 word: element.word,
+                                tagIds: element.tagIds,
                                 numberOfReview: element.numberOfReview,
                                 numberOfReviewCorrect: element.numberOfReviewCorrect,
+                                lastTimeReview: Date.now(),
                             },
                         },
                     };
@@ -311,6 +337,13 @@ const wordController = {
                     return item;
                 }
             })); // example: hierarchicalArrayOfWords=[10,13,20,89];
+            const tags = updatedUser.tags;
+            const updatedWordsLearned = updatedUser.wordsLearned.map((item) => {
+                return Object.assign(Object.assign({}, item._doc), { tags: item.tagIds.map((item) => {
+                        const tag = tags.find((i) => { var _a; return (_a = i._id) === null || _a === void 0 ? void 0 : _a.equals(item); }) || {};
+                        return tag;
+                    }), levelOfWord: (0, commonUtils_1.calculateLevelWord)(item.numberOfReviewCorrect, item.numberOfReview) });
+            });
             const dataUser = {
                 id: updatedUser._id.toString(),
                 username: updatedUser.username || "",
@@ -321,6 +354,7 @@ const wordController = {
                 techLogin: updatedUser.techLogin,
                 courseLearned: updatedUser.courseLearned,
                 hierarchicalArrayOfWords,
+                wordsLearned: isReturnWordLearned ? updatedWordsLearned : undefined,
             };
             res.status(200).json(dataUser);
         }
@@ -329,18 +363,83 @@ const wordController = {
             res.status(500).json({ message: "Internal server error" });
         }
     }),
+    importWordsUserLearned: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { id } = req.body;
+            const newWordsLearned = req.body.wordsLearned;
+            // Find the User document to update
+            const userToUpdate = yield models_1.Users.findById(id);
+            if (!userToUpdate) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            const { wordsLearned = [] } = userToUpdate || {};
+            // Update the User document fields
+            newWordsLearned.forEach((element) => {
+                const item = wordsLearned.find((i) => i.word === element.word);
+                if (!item) {
+                    const insertFilter = { _id: id };
+                    const insert = {
+                        $push: {
+                            wordsLearned: {
+                                word: element.word,
+                                tagIds: element.tagIds,
+                                examples: element.examples,
+                                numberOfReview: element.numberOfReview,
+                                numberOfReviewCorrect: element.numberOfReviewCorrect,
+                                lastTimeReview: Date.now(),
+                            },
+                        },
+                    };
+                    models_1.Users.updateOne(insertFilter, insert, function (err, insertResult) {
+                        if (err) {
+                            console.log("Lỗi thêm mới tài liệu:", err);
+                        }
+                    });
+                }
+            });
+            // After updating the user document, fetch the updated user data
+            const updatedUser = yield models_1.Users.findById(id);
+            if (!updatedUser) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            let hierarchicalArrayOfWords = (0, commonUtils_1.getHierarchicalArrayOfWords)(updatedUser.wordsLearned.map((item) => {
+                const newData = newWordsLearned.find((i) => i.word === item.word);
+                if (newData) {
+                    return Object.assign(Object.assign({}, item), { numberOfReview: newData.numberOfReview, numberOfReviewCorrect: newData.numberOfReviewCorrect });
+                }
+                else {
+                    return item;
+                }
+            })); // example: hierarchicalArrayOfWords=[10,13,20,89];
+            const tags = updatedUser.tags;
+            const updatedWordsLearned = updatedUser.wordsLearned.map((item) => {
+                return Object.assign(Object.assign({}, item._doc), { tags: item.tagIds.map((item) => {
+                        const tag = tags.find((i) => { var _a; return (_a = i._id) === null || _a === void 0 ? void 0 : _a.equals(item); }) || {};
+                        return tag;
+                    }), levelOfWord: (0, commonUtils_1.calculateLevelWord)(item.numberOfReviewCorrect, item.numberOfReview) });
+            });
+            res.status(200).json({
+                wordsLearned: updatedWordsLearned,
+                hierarchicalArrayOfWords,
+            });
+        }
+        catch (err) {
+            console.log("Error updating user:", err);
+            res.status(500).json({ message: "Internal server error" });
+        }
+    }),
+    /**
+     * @function `getListWordsToReview`.
+     * how to get data to review words.
+     *  Words will have lastTimeReview. nextTimeReview will base on lastTimeReview plus amount of time corresponding to each level:
+     *      with words in level1 review once an hour: ex: lastTimeReview: 2023/05/20 08:30 => nextTimeReview: 2023/05/20 09:30
+     *      with words in level2 review once a day
+     *      with words in level3 once each two day
+     *      with words in level4 once every three days.
+     *
+     * with each vocabulary review will get 100 words to review
+     */
     getListWordsToReview: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        /**
-         *
-         * how to get data to review words.
-         *  Words will have lastTimeReview. nextTimeReview will base on lastTimeReview plus amount of time corresponding to each level:
-         *      with words in level1 review once an hour: ex: lastTimeReview: 2023/05/20 08:30 => nextTimeReview: 2023/05/20 09:30
-         *      with words in level2 review once a day
-         *      with words in level3 once each two day
-         *      with words in level4 once every three days.
-         *
-         * with each vocabulary review will get 100 words to review
-         */
         try {
             const { limit = 100 } = req.query;
             const { authorization = "" } = req.headers || {};
@@ -349,8 +448,12 @@ const wordController = {
             const { id } = decodedToken;
             const dataUser = yield models_1.Users.findById(id);
             if (!!dataUser) {
-                const { wordsLearned = [] } = dataUser || {};
-                const sortedWordsLearned = wordsLearned.sort((a, b) => (a.lastTimeReview || 0) - (b.lastTimeReview || 0));
+                const { wordsLearned = [], tags = [] } = dataUser || {};
+                const filterVocabularyOnReviewTime = wordsLearned.filter((i) => {
+                    const timeToReview = (0, commonUtils_1.calcTimeToReivew)(i.lastTimeReview || Date.now(), i.numberOfReviewCorrect || 0, i.numberOfReview || 4);
+                    return timeToReview < Date.now();
+                });
+                const sortedWordsLearned = filterVocabularyOnReviewTime.sort((a, b) => (a.lastTimeReview || 0) - (b.lastTimeReview || 0));
                 let filteredWordsLearned = [];
                 if (limit === "UNLIMIT") {
                     filteredWordsLearned = sortedWordsLearned;
@@ -376,6 +479,10 @@ const wordController = {
                             topics: dataWord.topics,
                             translations: dataWord.translations,
                             definitions: dataWord.definitions,
+                            tags: item.tagIds.map((item) => {
+                                const tag = tags.find((i) => { var _a; return (_a = i._id) === null || _a === void 0 ? void 0 : _a.equals(item); }) || {};
+                                return tag;
+                            }),
                             idOfWordLearned: item._id,
                             word: item.word,
                             levelOfWord: (0, commonUtils_1.calculateLevelWord)(item.numberOfReviewCorrect, item.numberOfReview),

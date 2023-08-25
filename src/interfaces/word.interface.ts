@@ -1,3 +1,11 @@
+import mongoose from "mongoose";
+import { ICourseLearned } from "./user.minterface";
+
+interface MongoResult {
+  _id?: mongoose.Types.ObjectId;
+  _doc?: any;
+}
+
 export interface IPhoneticIPA {
   character: string;
   urlSoundIPA?: string;
@@ -29,8 +37,7 @@ interface IExampleOfWord {
   example?: string;
   translateExample?: string;
 }
-export interface IWord {
-  _id?: any;
+export interface IWord extends MongoResult {
   word: string;
   pronounce?: string;
   image?: string;
@@ -47,12 +54,14 @@ export interface IWord {
 }
 export interface IWords extends Array<IWord> {}
 
-export interface IWordLeaned {
-  _id: string;
+export interface IWordLeaned extends MongoResult {
   word: string;
+  description?: string;
+  examples?: IExampleOfWord[];
   numberOfReview: number;
   numberOfReviewCorrect: number;
   lastTimeReview: number;
+  tagIds: string[];
 }
 
 export interface IDataFilterWord {
@@ -60,4 +69,24 @@ export interface IDataFilterWord {
   limit?: number;
   subject?: string;
   subjects?: string[];
+}
+
+export interface IParamsOfAPIUpdateWordsUserLearned {
+  id?: string;
+  /**
+   * if `true`, API return field wordsLearned.
+   * @default false
+   */
+  isLearnNewWord?: boolean;
+  wordsLearned?: IWordLeaned[];
+  courseLearned?: ICourseLearned;
+  /**
+   * if `true`, API return field wordsLearned.
+   * @default false
+   */
+  isReturnWordLearned: boolean;
+  /**
+   *
+   */
+  isReviewWords?: boolean;
 }

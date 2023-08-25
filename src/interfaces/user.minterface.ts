@@ -1,9 +1,14 @@
+import mongoose from "mongoose";
 import { IWordLeaned } from "./word.interface";
 
-export interface IUser {
+interface MongoResult {
+  _id?: mongoose.Types.ObjectId;
+  _doc?: any;
+}
+export interface IUser extends MongoResult {
   id?: string;
   name: string;
-  username: string;
+  username?: string;
   email?: string;
   role?: string;
   token?: string;
@@ -16,12 +21,19 @@ export interface IUser {
   courseLearned?: ICourseLearned[];
   wordsLearned?: IWordLeaned[];
   hierarchicalArrayOfWords?: number[];
+  tags?: ITag[];
 }
+
+export interface ITag extends MongoResult {
+  title?: string;
+  description?: string;
+}
+
 interface Token {
   type: string;
 }
 
-export interface ICourseLearned {
+export interface ICourseLearned extends MongoResult {
   course?: string;
   subject?: string;
   numberPacks?: number[];

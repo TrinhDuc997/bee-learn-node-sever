@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 const uniqueValidator = require("mongoose-unique-validator");
 
 const schemaPhoneticIPA = new mongoose.Schema(
@@ -73,9 +73,6 @@ const SchemaWords = new mongoose.Schema({
         translateExample: { type: String },
       },
     ],
-  },
-  customExamples: {
-    type: [String],
   },
   definition: {
     type: String,
@@ -160,9 +157,29 @@ const usersSchema = new mongoose.Schema(
       type: [
         {
           word: { type: String },
+          description: { type: String },
+          examples: {
+            type: [
+              {
+                word: { type: String },
+                type: { type: String },
+                translation: { type: String },
+                example: { type: String },
+                translateExample: { type: String },
+              },
+            ],
+          },
           numberOfReview: { type: Number },
           numberOfReviewCorrect: { type: Number },
           lastTimeReview: { type: Number },
+          tagIds: {
+            type: [
+              {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Users.tags",
+              },
+            ],
+          },
         },
       ],
     },
@@ -177,8 +194,30 @@ const usersSchema = new mongoose.Schema(
         },
       ],
     },
+    tags: {
+      type: [
+        {
+          title: {
+            type: String,
+            unique: true,
+            require: true,
+          },
+          description: { type: String },
+        },
+      ],
+    },
   },
   { collection: "Users" }
 );
 // create a new model based on the schema
 export const Users = mongoose.model("Users", usersSchema);
+// list of tags
+// const listOfTags = new mongoose.Schema(
+//   {
+//     title: { type: String, unique: true, require: true },
+//     description: { type: String },
+//   },
+//   { collection: "ListOfTags" }
+// );
+
+// export const ListOfTags = mongoose.model("ListOfTags", listOfTags);

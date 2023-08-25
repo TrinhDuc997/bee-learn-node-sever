@@ -36,6 +36,7 @@ const UserController = {
         googleId,
         facebookId,
         techLogin,
+        tags: [{ title: "Mặc định", code: "default" }],
         tokens: [token],
       });
       const checkExistedUser = await Users.findOne({ username: username });
@@ -64,9 +65,16 @@ const UserController = {
 
   updateUser: async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
-      const { name, email, password, googleId, facebookId, techLogin } =
-        req.body;
+      const {
+        id,
+        name,
+        email,
+        password,
+        googleId,
+        facebookId,
+        techLogin,
+        tags,
+      } = req.body;
 
       // Find the User document to update
       const userToUpdate = await Users.findById(id);
@@ -81,12 +89,20 @@ const UserController = {
       userToUpdate.googleId = googleId || userToUpdate.googleId;
       userToUpdate.facebookId = facebookId || userToUpdate.facebookId;
       userToUpdate.techLogin = techLogin || userToUpdate.techLogin;
-
+      userToUpdate.tags = tags || userToUpdate.tags;
       // Save the updated User document to the database
       await userToUpdate.save();
-
+      const dataUser: IUser = {
+        id: userToUpdate._id.toString(),
+        email: userToUpdate.email,
+        name: userToUpdate.name || "",
+        googleId: userToUpdate.googleId,
+        facebookId: userToUpdate.facebookId,
+        techLogin: userToUpdate.techLogin,
+        tags: userToUpdate.tags,
+      };
       // Return the updated User document as the response
-      res.status(200).json(userToUpdate);
+      res.status(200).json(dataUser);
     } catch (err) {
       console.log("Error updating user:", err);
       res.status(500).json({ message: "Internal server error" });
@@ -139,6 +155,7 @@ const UserController = {
             image,
             googleId: loginBy === "google" ? id : null,
             facebookId: loginBy === "facebook" ? id : null,
+            tags: [{ title: "Mặc định", code: "default" }],
           });
           // Save the new User document to the database
           user = await newUser.save();
@@ -169,6 +186,7 @@ const UserController = {
           googleId: user.googleId,
           facebookId: user.facebookId,
           techLogin: user.techLogin,
+          tags: user.tags,
           token,
         };
 
@@ -205,6 +223,7 @@ const UserController = {
           googleId: user.googleId,
           facebookId: user.facebookId,
           techLogin: user.techLogin,
+          tags: user.tags,
           courseLearned: user.courseLearned,
           hierarchicalArrayOfWords,
         };

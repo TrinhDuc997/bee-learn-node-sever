@@ -74,9 +74,6 @@ const SchemaWords = new mongoose_1.default.Schema({
             },
         ],
     },
-    customExamples: {
-        type: [String],
-    },
     definition: {
         type: String,
     },
@@ -151,9 +148,29 @@ const usersSchema = new mongoose_1.default.Schema({
         type: [
             {
                 word: { type: String },
+                description: { type: String },
+                examples: {
+                    type: [
+                        {
+                            word: { type: String },
+                            type: { type: String },
+                            translation: { type: String },
+                            example: { type: String },
+                            translateExample: { type: String },
+                        },
+                    ],
+                },
                 numberOfReview: { type: Number },
                 numberOfReviewCorrect: { type: Number },
                 lastTimeReview: { type: Number },
+                tagIds: {
+                    type: [
+                        {
+                            type: mongoose_1.default.Schema.Types.ObjectId,
+                            ref: "Users.tags",
+                        },
+                    ],
+                },
             },
         ],
     },
@@ -168,6 +185,27 @@ const usersSchema = new mongoose_1.default.Schema({
             },
         ],
     },
+    tags: {
+        type: [
+            {
+                title: {
+                    type: String,
+                    unique: true,
+                    require: true,
+                },
+                description: { type: String },
+            },
+        ],
+    },
 }, { collection: "Users" });
 // create a new model based on the schema
 exports.Users = mongoose_1.default.model("Users", usersSchema);
+// list of tags
+// const listOfTags = new mongoose.Schema(
+//   {
+//     title: { type: String, unique: true, require: true },
+//     description: { type: String },
+//   },
+//   { collection: "ListOfTags" }
+// );
+// export const ListOfTags = mongoose.model("ListOfTags", listOfTags);

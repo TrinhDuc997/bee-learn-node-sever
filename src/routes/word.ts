@@ -27,6 +27,8 @@ router.put(
 // Update Words User Learned
 router.put("/updateWordsUserLearned", wordController.updateWordsUserLearned);
 
+router.put("/importWordsUserLearned", wordController.importWordsUserLearned);
+
 router.get("/getListWordsToReview", wordController.getListWordsToReview);
 
 export default router;
